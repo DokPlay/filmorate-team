@@ -1,19 +1,14 @@
-name: CI (placeholder)
-on:
-  push:
-  pull_request:
+﻿name: CI
+on: [push, pull_request]
 
 jobs:
-  env-check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-      - name: Check Java version
-        run: java -version
-      - name: Placeholder
-        run: echo "CI-заглушка: сборка будет добавлена позже"
+          cache: maven
+      - run: ./mvnw -B -DskipTests=false clean verify
