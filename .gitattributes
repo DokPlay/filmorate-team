@@ -1,4 +1,37 @@
+# Базово: нормализуем текст, но для многих типов принудительно LF
 * text=auto
-*.java text eol=lf
-*.yml text eol=lf
-*.md text eol=lf
+
+# Исходники и конфиги — LF в рабочей копии на любой ОС
+*.java      text eol=lf
+*.kt        text eol=lf
+*.xml       text eol=lf
+*.properties text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.sql       text eol=lf
+*.sh        text eol=lf
+*.gradle    text eol=lf
+Dockerfile  text eol=lf
+.gitattributes text eol=lf
+.editorconfig  text eol=lf
+.gitignore     text eol=lf
+pom.xml     text eol=lf
+
+# Windows-скрипты — CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Бинарники — без преобразований
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.jar binary
+*.war binary
+*.7z  binary
+*.gz  binary
