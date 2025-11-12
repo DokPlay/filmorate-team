@@ -1,5 +1,16 @@
-﻿name: CI
-on: [push, pull_request]
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -11,4 +22,5 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      - run: chmod +x mvnw
       - run: ./mvnw -B -DskipTests=false clean verify
