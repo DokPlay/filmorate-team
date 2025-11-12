@@ -1,0 +1,19 @@
+name: CI (placeholder)
+on:
+  push:
+  pull_request:
+
+jobs:
+  env-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Check Java version
+        run: java -version
+      - name: Placeholder
+        run: echo "CI-заглушка: сборка будет добавлена позже"

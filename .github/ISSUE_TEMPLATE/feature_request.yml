@@ -1,0 +1,16 @@
+name: Запрос фичи
+description: Предложите улучшение
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Идея
+      description: Опишите, что и зачем нужно.
+    validations:
+      required: true
+  - type: input
+    id: story-points
+    attributes:
+      label: Оценка (Story points)

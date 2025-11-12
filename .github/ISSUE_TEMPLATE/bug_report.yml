@@ -1,0 +1,20 @@
+name: Баг-репорт
+description: Сообщите о проблеме
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Описание
+      description: Что ожидали? Что получилось?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги для воспроизведения
+  - type: input
+    id: env
+    attributes:
+      label: Окружение (Java, ОС)
