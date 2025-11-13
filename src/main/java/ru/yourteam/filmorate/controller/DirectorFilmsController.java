@@ -2,6 +2,7 @@
 package ru.yourteam.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yourteam.filmorate.model.Director;
 import ru.yourteam.filmorate.repository.DirectorRepository;
@@ -19,28 +20,34 @@ public class DirectorFilmsController {
         this.directorRepository = directorRepository;
     }
 
+    // получение всех режиссеров
     @GetMapping
-    public Collection<Director> findAll() {
-        return directorRepository.findAll();
+    public ResponseEntity<Collection<Director>> findAll() {
+        return ResponseEntity.ok(directorRepository.findAll());
     }
 
+    // получение режиссера по id
     @GetMapping("/{id}")
-    public Director getDirector(@PathVariable long id) {
-        return directorRepository.getById(id);
+    public ResponseEntity getDirector(@PathVariable long id) {
+        return ResponseEntity.ok(directorRepository.getById(id));
     }
 
+    // создание режиссера
     @PostMapping
-    public Director create(@RequestBody Director director) {
-        return directorRepository.create(director);
+    public ResponseEntity create(@RequestBody Director director) {
+        return ResponseEntity.ok(directorRepository.create(director));
     }
 
+
+    // изменение режиссера
     @PutMapping
-    public Director update(@RequestBody Director director) {
-        return directorRepository.update(director);
+    public ResponseEntity update(@RequestBody Director director) {
+        return ResponseEntity.ok(directorRepository.update(director));
     }
 
+    // удаление режиссера
     @DeleteMapping("/{id}")
-    public Director delete(@RequestBody Director director) {
-        return directorRepository.delete(director);
+    public Director delete(@PathVariable long id) {
+        return directorRepository.delete(id);
     }
 }
