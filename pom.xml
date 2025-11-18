@@ -2,13 +2,56 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>ru.yourteam</groupId>
   <artifactId>filmorate</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>filmorate</name>
   <description>Filmorate skeleton (no code)</description>
+
   <properties>
+    <!-- Java -->
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+
+    <!-- Единая кодировка проекта -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
+
+  <build>
+    <plugins>
+      <!-- Компиляция: Java 21 + UTF-8 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <release>21</release>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- Ресурсы: читать/писать как UTF-8 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- Тесты: JVM запускается с file.encoding=UTF-8 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
