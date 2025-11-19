@@ -1,4 +1,4 @@
-package ru.yourteam.filmorate.dto;
+package ru.yourteam.filmorate.dto.reviewDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

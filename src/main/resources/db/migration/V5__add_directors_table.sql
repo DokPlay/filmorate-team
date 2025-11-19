@@ -1,0 +1,18 @@
+-- Таблица режиссёров
+CREATE TABLE IF NOT EXISTS directors (
+    director_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    director_name VARCHAR(255) NOT NULL
+);
+
+-- Связь фильм—режиссёр (многие-ко-многим)
+CREATE TABLE IF NOT EXISTS film_director (
+    film_id INTEGER NOT NULL,
+    director_id INTEGER NOT NULL,
+    PRIMARY KEY (film_id, director_id),
+    FOREIGN KEY (film_id) REFERENCES films(film_id) ON DELETE CASCADE,
+    FOREIGN KEY (director_id) REFERENCES directors(director_id) ON DELETE CASCADE
+);
+
+-- Индексы для джоинов
+CREATE INDEX IF NOT EXISTS idx_fd_film ON film_director(film_id);
+CREATE INDEX IF NOT EXISTS idx_fd_director ON film_director(director_id);

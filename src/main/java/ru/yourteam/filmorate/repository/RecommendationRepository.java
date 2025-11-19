@@ -5,14 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dal.mappers.FilmRowMapper;
+import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
 import ru.yourteam.filmorate.model.Film;
 
 @Repository
