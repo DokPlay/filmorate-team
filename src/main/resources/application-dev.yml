@@ -1,1 +1,11 @@
-# Профиль DEV: локальные настройки.
+spring:
+  datasource:
+    url: jdbc:h2:file:./db/filmorate
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enabled: true
