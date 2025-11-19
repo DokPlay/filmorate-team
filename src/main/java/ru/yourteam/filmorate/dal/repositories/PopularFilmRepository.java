@@ -71,7 +71,7 @@ public class PopularFilmRepository {
             return jdbc.query(FIND_POPULAR_BY_YEAR, rowMapper, year, count);
         } else {
             // и жанр, и год
-            return jdbc.query(FIND_POPULAR_BY_GENRE_AND_YEAR, rowMapper, genreId, year);
+            return jdbc.query(FIND_POPULAR_BY_GENRE_AND_YEAR, rowMapper, genreId, year, count);
         }
     }
 }

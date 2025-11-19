@@ -1,11 +1,12 @@
 package ru.yourteam.filmorate.dto;
 
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-public class CommonFilmDtoDto implements RowMapper<CommonFilmDto> {
+@Component
+public class CommonFilmRowMapper implements RowMapper<CommonFilmDto> {
     @Override
     public CommonFilmDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         CommonFilmDto commonFilmDto = new CommonFilmDto();
