@@ -1,0 +1,2606 @@
+{
+	"info": {
+		"_postman_id": "274ef820-7fe5-4514-b339-656ea45d8a6c",
+		"name": "filmorate_team_reviews",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47350154"
+	},
+	"item": [
+		{
+			"name": "add-reviews",
+			"item": [
+				{
+					"name": "Create and get bad review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Has review response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, `\"content\" must be \"${review.content}\"`).to.eql(review.content);\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field must be \"false\"').to.false;   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ＄{review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"pm.test(\"Test review 'useful' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('useful');\r",
+									"    pm.expect(jsonData.useful, '\"useful\" field must be \"0\"').to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"id\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"isPositive\": false,\n  \"userId\": 1,\n  \"filmId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This film is soo bad.\",\n  \"isPositive\": false,\n  \"userId\": -1,\n  \"filmId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail user null",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500, 400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This film is soo bad.\",\n  \"isPositive\": false,\n  \"filmId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail film",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This film is soo bad.\",\n  \"isPositive\": false,\n  \"userId\": 1,\n  \"filmId\": -1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail film null",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500, 400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This film is soo bad.\",\n  \"isPositive\": false,\n  \"userId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review create Fail positive null",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500, 400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This film is soo bad.\",\n  \"userId\": 1,\n  \"filmId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Review update to positive Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Has review response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, '\"content\" must be \"This film is not too bad.\"').to.eql(\"This film is not too bad.\");\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field must be \"false\"').to.true;   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ＄{review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"pm.test(\"Test review 'useful' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('useful');\r",
+									"    pm.expect(jsonData.useful, '\"useful\" field must be \"0\"').to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"id\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"    pm.request.body.update({\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"reviewId\": review.reviewId,\r",
+									"            \"content\": \"This film is not too bad.\",\r",
+									"            \"isPositive\": true,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            }),\r",
+									"        options: { raw: { language: 'json' } }\r",
+									"    });\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reviewId\": 1,\n  \"content\": \"This film is not too bad.\",\n  \"isPositive\": true,\n  \"userId\": 2,\n  \"filmId\": 2,\n  \"useful\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get reviews to film",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Has review response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, `\"content\" must be \"${review.content}\"`).to.eql(review.content);\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field must be \"false\"').to.false;   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ${review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"pm.test(\"Test review 'useful' field\", function () {\r",
+									"    var jsonData = pm.response.json()[0];\r",
+									"    pm.expect(jsonData).to.have.property('useful');\r",
+									"    pm.expect(jsonData.useful, '\"useful\" field must be \"0\"').to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"id\", film.id);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reviews?filmId={{id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "filmId",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Delete review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url : \"http://localhost:8080/reviews?filmId=\" + pm.collectionVariables.get(\"filmId\"),\r",
+									"    method : \"GET\"\r",
+									"    }, (error, response) => {\r",
+									"        pm.test(\"Review number has changed\", function () {\r",
+									"            var reviewsLength = pm.collectionVariables.get(\"reviewsLength\");\r",
+									"            var newReviewsLength = response.json().length;\r",
+									"            pm.expect(newReviewsLength, 'List length decreased by 1').to.eql(reviewsLength-1);\r",
+									"        });\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review, reviewGet;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        reviewGet = await api.getReview(film.id);\r",
+									"        pm.collectionVariables.set(\"id\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"filmId\", film.id);\r",
+									"        pm.collectionVariables.set(\"reviewsLength\", reviewGet.length);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get review after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review, reviewGet;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        await api.removeReview(review.reviewId);\r",
+									"        \r",
+									"        pm.collectionVariables.set(\"id\", review.reviewId);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Add like to review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, `\"content\" must be \"${review.content}\"`).to.eql(review.content);\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, `\"isPositive\" field must be ${review.isPositive}\"`).to.eql(review.isPositive);   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ＄{review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"pm.test(\"Test review 'useful' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('useful');\r",
+									"    pm.expect(jsonData.useful, '\"useful\" field must be \"0\"').to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review, reviewGet;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"reviewId\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"userId\", user.id);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"        reviewGet = await api.getReview(film.id);\r",
+									"        pm.collectionVariables.set(\"reviewGet\", reviewGet[0]);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"    pm.request.body.update({\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"reviewId\": review.reviewId,\r",
+									"            \"content\": \"This film is not too bad.\",\r",
+									"            \"isPositive\": true,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            }),\r",
+									"        options: { raw: { language: 'json' } }\r",
+									"    });\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reviewId\": 1,\n  \"content\": \"This film is not too bad.\",\n  \"isPositive\": true,\n  \"userId\": 2,\n  \"filmId\": 2,\n  \"useful\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{reviewId}}/like/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{reviewId}}",
+								"like",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Remove like from review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, `\"content\" must be \"${review.content}\"`).to.eql(review.content);\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, `\"isPositive\" field must be ${review.isPositive}\"`).to.eql(review.isPositive);   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ＄{review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url : \"http://localhost:8080/reviews?filmId=\" + pm.collectionVariables.get(\"filmId\"),\r",
+									"    method : \"GET\"\r",
+									"    }, (error, response) => {\r",
+									"        pm.test(\"Test review 'useful' field\", function () {\r",
+									"            var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"            pm.expect(jsonData).to.have.property('useful');\r",
+									"            pm.expect(jsonData.useful, '\"useful\" field must be \"1\" before deleting like').to.eql(1);\r",
+									"            pm.expect(response.json()[0].useful, '\"useful\" field must be \"0\" after deleting like').to.eql(0);\r",
+									"        });\r",
+									"    });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review, reviewGet, user2;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        user2 = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"reviewId\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"userId\", user2.id);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"        pm.collectionVariables.set(\"filmId\", film.id);\r",
+									"        await api.addLikeToReview(review.reviewId, user2.id)\r",
+									"        reviewGet = await api.getReview(film.id);\r",
+									"        pm.collectionVariables.set(\"reviewGet\", reviewGet[0]);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"    pm.request.body.update({\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"reviewId\": review.reviewId,\r",
+									"            \"content\": \"This film is not too bad.\",\r",
+									"            \"isPositive\": true,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            }),\r",
+									"        options: { raw: { language: 'json' } }\r",
+									"    });\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reviewId\": 1,\n  \"content\": \"This film is not too bad.\",\n  \"isPositive\": true,\n  \"userId\": 2,\n  \"filmId\": 2,\n  \"useful\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{reviewId}}/like/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{reviewId}}",
+								"like",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Add dislike to review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"var review = pm.collectionVariables.get(\"review\");\r",
+									"pm.test(\"Test review 'reviewId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('reviewId');\r",
+									"    pm.expect(jsonData.reviewId, `\"reviewId\" must be ${review.reviewId}`).to.eql(review.reviewId);\r",
+									"});\r",
+									"pm.test(\"Test review 'content' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('content');\r",
+									"    pm.expect(jsonData.content, `\"content\" must be \"${review.content}\"`).to.eql(review.content);\r",
+									"});\r",
+									"pm.test(\"Test review 'isPositive' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('isPositive');\r",
+									"    pm.expect(jsonData.isPositive, `\"isPositive\" field must be ${review.isPositive}\"`).to.eql(review.isPositive);   \r",
+									"});\r",
+									"pm.test(\"Test review 'userId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('userId');\r",
+									"    pm.expect(jsonData.userId, `\"userId\" field must be ${review.userId}`).to.eql(review.userId);\r",
+									"});\r",
+									"pm.test(\"Test review 'filmId' field\", function () {\r",
+									"    var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"    pm.expect(jsonData).to.have.property('filmId');\r",
+									"    pm.expect(jsonData.filmId, `\"filmId\" field must be ＄{review.filmId}`).to.eql(review.filmId);\r",
+									"});\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url : \"http://localhost:8080/reviews?filmId=\" + pm.collectionVariables.get(\"filmId\"),\r",
+									"    method : \"GET\"\r",
+									"    }, (error, response) => {\r",
+									"        pm.test(\"Test review 'useful' field\", function () {\r",
+									"            var jsonData = pm.collectionVariables.get(\"reviewGet\");\r",
+									"            pm.expect(jsonData).to.have.property('useful');\r",
+									"            pm.expect(jsonData.useful, '\"useful\" field must be \"1\" before adding dislike').to.eql(1);\r",
+									"            console.log(response.json())\r",
+									"            pm.expect(response.json()[0].useful, '\"useful\" field must be \"-1\" after adding dislike').to.eql(-1);\r",
+									"        });\r",
+									"    });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const main = async () => {\r",
+									"    const api = new API(pm);\r",
+									"    const rnd = new RandomUtils();\r",
+									"\r",
+									"    let user, film, review, reviewGet, user2;\r",
+									"    try {\r",
+									"        user = await api.addUser(rnd.getUser());\r",
+									"        user2 = await api.addUser(rnd.getUser());\r",
+									"        film = await api.addFilm(rnd.getFilm());\r",
+									"        review = await api.addReview({\r",
+									"            \"content\": \"This film is soo bad.\",\r",
+									"            \"isPositive\": false,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            });\r",
+									"        pm.collectionVariables.set(\"reviewId\", review.reviewId);\r",
+									"        pm.collectionVariables.set(\"userId\", user2.id);\r",
+									"        pm.collectionVariables.set(\"review\", review);\r",
+									"        pm.collectionVariables.set(\"filmId\", film.id);\r",
+									"        await api.addLikeToReview(review.reviewId, user2.id)\r",
+									"        reviewGet = await api.getReview(film.id);\r",
+									"        pm.collectionVariables.set(\"reviewGet\", reviewGet[0]);\r",
+									"    } catch(err) {\r",
+									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+									"    }\r",
+									"\r",
+									"    pm.request.body.update({\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"reviewId\": review.reviewId,\r",
+									"            \"content\": \"This film is not too bad.\",\r",
+									"            \"isPositive\": true,\r",
+									"            \"userId\": user.id,\r",
+									"            \"filmId\": film.id\r",
+									"            }),\r",
+									"        options: { raw: { language: 'json' } }\r",
+									"    });\r",
+									"\r",
+									"};\r",
+									"\r",
+									"const interval = setInterval(() => {}, 1000);\r",
+									"\r",
+									"setTimeout(async () => \r",
+									"    {\r",
+									"        try {\r",
+									"            await main();\r",
+									"        } catch (e) {\r",
+									"            console.error(e);\r",
+									"        } finally {\r",
+									"            clearInterval(interval);\r",
+									"        }\r",
+									"    },  \r",
+									"    100 \r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reviewId\": 1,\n  \"content\": \"This film is not too bad.\",\n  \"isPositive\": true,\n  \"userId\": 2,\n  \"filmId\": 2,\n  \"useful\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews/{{reviewId}}/dislike/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews",
+								"{{reviewId}}",
+								"dislike",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"API = class {\r",
+					"    constructor(postman, verbose = false, baseUrl = \"http://localhost:8080\") {\r",
+					"        this.baseUrl = baseUrl;\r",
+					"        this.pm = postman;\r",
+					"        this._verbose = verbose;\r",
+					"    }\r",
+					"\r",
+					"    async addUser(user, verbose=null) {\r",
+					"        return this.post(\"/users\", user, \"Ошибка при добавлении нового пользователя: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async removeUser(userId, verbose=null) {\r",
+					"        return this.delete(\"/users/\" + userId, \"Ошибка при удалении нового пользователя: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addFilm(film, verbose=null) {\r",
+					"        return this.post(\"/films\", film, \"Ошибка при добавлении нового фильма: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async removeFilm(filmId, verbose=null) {\r",
+					"        return this.delete(\"/films/\" + filmId, null, \"Ошибка при удалении фильма: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addFriend(userId, friendId, verbose=null) {\r",
+					"        return this.put(\"/users/\" + userId + '/friends/' + friendId, null, \"Ошибка при добавлении нового фильма: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addDirector(director, verbose=null) {\r",
+					"        return this.post(\"/directors\", director, \"Ошибка при добавлении нового режиссера: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addLike(filmId, userId, verbose=null) {\r",
+					"        return this.put(\"/films/\" + filmId + '/like/' + userId, null, \"Ошибка при добавлении лайка на фильм: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addMark(filmId, userId, mark, verbose=null) {\r",
+					"        return this.put(\"/films/\" + filmId + '/like/' + userId + \"/\" + mark, null, \"Ошибка при добавлении оценки на фильм: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addReview(review, verbose=null) {\r",
+					"        return this.post(\"/reviews\", review, \"Ошибка при добавлении нового отзыва: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async addLikeToReview(reviewId, userId, verbose=null) {\r",
+					"        return this.put(\"/reviews/\" + reviewId + '/like/' + userId, null, \"Ошибка при добавлении лайка на отзыв: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async updateReview(review, verbose=null) {\r",
+					"        return this.put(\"/reviews\", review, \"Ошибка при обновлении отзыва: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async removeLike(filmId, userId, verbose=null) {\r",
+					"        return this.delete(\"/films/\" + filmId + '/like/' + userId, null, \"Ошибка при удалении лайка на фильм: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async removeReview(reviewId, verbose=null) {\r",
+					"        return this.delete(\"/reviews/\" + reviewId, null, \"Ошибка при удалении отзыва на фильм: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async removeFriend(userId, friendId, verbose=null) {\r",
+					"        return this.delete(\"/users/\" + userId + '/friends/' + friendId, null, \"Ошибка при удалении друга: \", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async getFriends(userId, verbose=null) {\r",
+					"        return this.get('/users/' + userId + '/friends', null, \"Ошибка при поиске друзей по id пользователя\", verbose);\r",
+					"    }\r",
+					"    \r",
+					"    async getPopular(genreId = null, year = null, verbose=null) {\r",
+					"        var requestString = '/films/popular?count=1000'\r",
+					"        requestString += genreId == null ? \"\" : \"&genreId=\" + genreId;\r",
+					"        requestString += year == null ? \"\" : \"&year=\" + year;\r",
+					"        return this.get(requestString, null, \"Ошибка при поиске популярных фильмов\", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async getReview(filmId=null, verbose=null) {\r",
+					"        var requestString = '/reviews?count=1000';\r",
+					"        requestString += filmId == null ? \"\" : \"&filmId=\" + filmId;\r",
+					"        return this.get(requestString, null, \"Ошибка при поиске отзывов\", verbose);\r",
+					"    }\r",
+					"\r",
+					"    async post(path, body, errorText = \"Ошибка при выполнении post-запроса: \", verbose=null) {\r",
+					"        return this.sendRequest(\"POST\", path, body, errorText, verbose);\r",
+					"    }\r",
+					"\r",
+					"    async patch(path, body = null, errorText = \"Ошибка при выполнении patch-запроса: \", verbose=null) {\r",
+					"        return this.sendRequest(\"PATCH\", path, body, errorText, verbose);\r",
+					"    }\r",
+					"\r",
+					"    async get(path, body = null, errorText = \"Ошибка при выполнении get-запроса: \", verbose=null) {\r",
+					"        return this.sendRequest(\"GET\", path, body, errorText, verbose);\r",
+					"    }\r",
+					"\r",
+					"    async put(path, body = null, errorText = \"Ошибка при выполнении put-запроса: \", verbose=null) {\r",
+					"        return this.sendRequest(\"PUT\", path, body, errorText, verbose);\r",
+					"    }\r",
+					"\r",
+					"    async delete(path, body = null, errorText = \"Ошибка при выполнении delte-запроса: \", verbose=null) {\r",
+					"        return this.sendRequest(\"DELETE\", path, body, errorText, verbose);\r",
+					"    }\r",
+					"\r",
+					"    async sendRequest(method, path, body=null, errorText = \"Ошибка при выполнении запроса: \", verbose=null) {\r",
+					"        return new Promise((resolve, reject) => {\r",
+					"            verbose = verbose == null ? this._verbose : verbose;\r",
+					"            const request = {\r",
+					"                url: this.baseUrl + path,\r",
+					"                method: method,\r",
+					"                body: body == null ? \"\" : JSON.stringify(body),\r",
+					"                header: { \"Content-Type\": \"application/json\" },\r",
+					"            };\r",
+					"            if(verbose) {\r",
+					"                console.log(\"Отправляю запрос: \", request);\r",
+					"            }\r",
+					"\r",
+					"            try {\r",
+					"                this.pm.sendRequest(request, (error, response) => {\r",
+					"                    if(error || (response.code >= 400 && response.code <= 599)) {\r",
+					"                        let err = error ? error : JSON.stringify(response.json());\r",
+					"                        console.error(\"При выполнении запроса к серверу возникла ошика.\\n\", err,\r",
+					"                             \"\\nДля отладки проблемы повторите такой же запрос к вашей программе \" + \r",
+					"                             \"на локальном компьютере. Данные запроса:\\n\", JSON.stringify(request));\r",
+					"\r",
+					"                        reject(new Error(errorText + err));\r",
+					"                    }\r",
+					"                    if(verbose) {\r",
+					"                        console.log(\"Результат обработки запроса: код состояния - \", response.code, \", тело: \", response.json());\r",
+					"                    }\r",
+					"                    if (response.stream.length === 0){\r",
+					"                        resolve(null);\r",
+					"                    }else{\r",
+					"                        resolve(response.json());\r",
+					"                    }\r",
+					"                });\r",
+					"                \r",
+					"            } catch(err) {\r",
+					"                if(verbose) {\r",
+					"                    console.error(errorText, err);\r",
+					"                }\r",
+					"                return Promise.reject(err);\r",
+					"            }\r",
+					"        });\r",
+					"    }\r",
+					"};\r",
+					"\r",
+					"RandomUtils = class {\r",
+					"    constructor() {}\r",
+					"    getUser() {\r",
+					"        let date = new Date(new Date(1960, 0, 1).getTime() + Math.random() * (new Date(2010, 0, 1).getTime() - new Date(1960, 0, 1).getTime()));\r",
+					"        return {\r",
+					"            name: pm.variables.replaceIn('{{$randomFullName}}'),\r",
+					"            login: this.getWord(10),\r",
+					"            email: pm.variables.replaceIn('{{$randomEmail}}'),\r",
+					"            birthday: date.toISOString().slice(0,10)\r",
+					"        };\r",
+					"    }\r",
+					"\r",
+					"    getFilm(director=null) {\r",
+					"        let date = new Date(new Date(1960, 0, 1).getTime() + Math.random() * (new Date(2010, 0, 1).getTime() - new Date(1960, 0, 1).getTime()));\r",
+					"        var toReturn = {\r",
+					"            name: this.getWord(15),\r",
+					"            description: this.getWord(50),\r",
+					"            releaseDate: date.toISOString().slice(0,10),\r",
+					"            duration: Math.floor(Math.random() * (180 - 60 + 1) + 60),\r",
+					"            mpa: { id: Math.floor(Math.random() * (5 - 1 + 1) + 1)},\r",
+					"            genres: [{ id: Math.floor(Math.random() * (6 - 1 + 1) + 1)}]\r",
+					"        };\r",
+					"        if (director!==null)\r",
+					"            toReturn.directors = [{ id: director.id}];\r",
+					"        return toReturn;\r",
+					"    }\r",
+					"\r",
+					"\r",
+					"    getWord(length = 1) {\r",
+					"        let result = '';\r",
+					"        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+					"        const charactersLength = characters.length;\r",
+					"        let counter = 0;\r",
+					"        while (counter < length) {\r",
+					"            result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+					"            counter += 1;\r",
+					"        }\r",
+					"        return result;\r",
+					"    }\r",
+					"\r",
+					"        getName(length = 1) {\r",
+					"        let result = '';\r",
+					"        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+					"        const charactersLength = characters.length;\r",
+					"        let counter = 0;\r",
+					"        while (counter < length) {\r",
+					"            result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+					"            counter += 1;\r",
+					"        }\r",
+					"        return result;\r",
+					"    }\r",
+					"\r",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "user",
+			"value": ""
+		},
+		{
+			"key": "new_user_info",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": ""
+		},
+		{
+			"key": "friend_id",
+			"value": ""
+		},
+		{
+			"key": "user_friends",
+			"value": ""
+		},
+		{
+			"key": "user3_id",
+			"value": ""
+		},
+		{
+			"key": "film",
+			"value": ""
+		},
+		{
+			"key": "film1_id",
+			"value": ""
+		},
+		{
+			"key": "film2_id",
+			"value": ""
+		},
+		{
+			"key": "film3_id",
+			"value": ""
+		},
+		{
+			"key": "film_id",
+			"value": ""
+		},
+		{
+			"key": "source",
+			"value": ""
+		},
+		{
+			"key": "director",
+			"value": ""
+		},
+		{
+			"key": "director_id",
+			"value": ""
+		},
+		{
+			"key": "name_to_change",
+			"value": ""
+		},
+		{
+			"key": "film1",
+			"value": ""
+		},
+		{
+			"key": "film2",
+			"value": ""
+		},
+		{
+			"key": "popularLength",
+			"value": ""
+		},
+		{
+			"key": "stringtosearch",
+			"value": ""
+		},
+		{
+			"key": "review",
+			"value": ""
+		},
+		{
+			"key": "filmId",
+			"value": ""
+		},
+		{
+			"key": "reviewsLength",
+			"value": ""
+		},
+		{
+			"key": "reviewId",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "reviewGet",
+			"value": ""
+		},
+		{
+			"key": "userid",
+			"value": ""
+		},
+		{
+			"key": "friendid",
+			"value": ""
+		},
+		{
+			"key": "reviewid",
+			"value": ""
+		},
+		{
+			"key": "filmid",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "films",
+			"value": ""
+		}
+	]
+}
