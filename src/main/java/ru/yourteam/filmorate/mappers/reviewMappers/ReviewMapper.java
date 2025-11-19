@@ -1,6 +1,6 @@
 package ru.yourteam.filmorate.mappers.reviewMappers;
 
-import ru.yourteam.filmorate.dto.ReviewDto;
+import ru.yourteam.filmorate.dto.reviewDto.ReviewDto;
 import ru.yourteam.filmorate.model.Review;
 
 public class ReviewMapper {

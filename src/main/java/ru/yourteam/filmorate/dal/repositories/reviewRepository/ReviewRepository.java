@@ -1,4 +1,4 @@
-package ru.yourteam.filmorate.dal.repositories;
+package ru.yourteam.filmorate.dal.repositories.reviewRepository;
 
 
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dal.mappers.FilmRowMapper;
-import ru.yourteam.filmorate.dal.mappers.ReviewRowMapper;
+import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
+import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.ReviewRowMapper;
 import ru.yourteam.filmorate.dal.mappers.UserRowMapper;
 import ru.yourteam.filmorate.exceptions.NotFoundException;
 import ru.yourteam.filmorate.model.Film;

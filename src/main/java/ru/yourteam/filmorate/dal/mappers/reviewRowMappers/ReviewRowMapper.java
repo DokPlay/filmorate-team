@@ -1,4 +1,4 @@
-package ru.yourteam.filmorate.dal.mappers;
+package ru.yourteam.filmorate.dal.mappers.reviewRowMappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
