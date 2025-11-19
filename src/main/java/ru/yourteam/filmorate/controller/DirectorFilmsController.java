@@ -14,6 +14,8 @@ import ru.yourteam.filmorate.service.DirectorServiceImpl;
 import ru.yourteam.filmorate.service.SortMode;
 
 import java.util.Collection;
+import ru.yourteam.filmorate.dto.FilmDto;
+import java.util.List;
 
 @Validated
 @RestController

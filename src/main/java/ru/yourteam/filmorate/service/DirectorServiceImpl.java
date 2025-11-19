@@ -1,12 +1,12 @@
+// Сервисный слой для управления режиссёрами и их фильмами.
 package ru.yourteam.filmorate.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yourteam.filmorate.dto.DirectorDto;
-import ru.yourteam.filmorate.exception.GlobalExceptionHandler;
+import ru.yourteam.filmorate.dto.FilmDto;
 import ru.yourteam.filmorate.exception.ValidationException;
-import ru.yourteam.filmorate.model.Director;
 import ru.yourteam.filmorate.repository.DirectorRepository;
 
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public DirectorDto update(DirectorDto dto) { // 200 — обновлённый объект; 404 — нет id; 400 — невалидный name
         validateDirector(dto);
+        // проверим, что режиссёр существует (бросит 404, если нет)
         getById(dto.getId());
         directorRepository.update(dto.getId(), dto.getName());
         return dto;
@@ -63,8 +64,14 @@ public class DirectorServiceImpl implements DirectorService {
         getById(directorId); // проверим есть ли режиссер
         List<FilmDto> filmDtoList = new ArrayList<>();
         switch (sort) {
-            case LIKES : filmDtoList = directorRepository.findFilmsByDirectorOrderByLikes(directorId, 1000, 0);
-            case YEAR  : filmDtoList = directorRepository.findFilmsByDirectorOrderByYear(directorId, 1000,  0);
+            case LIKES:
+                filmDtoList = directorRepository.findFilmsByDirectorOrderByLikes(directorId, 1000, 0);
+                break;
+            case YEAR:
+                filmDtoList = directorRepository.findFilmsByDirectorOrderByYear(directorId, 1000, 0);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown sort mode: " + sort);
         }
         return filmDtoList;
     }
