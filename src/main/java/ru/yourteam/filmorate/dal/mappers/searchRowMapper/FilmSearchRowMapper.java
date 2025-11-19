@@ -29,11 +29,9 @@ public class FilmSearchRowMapper implements RowMapper<Film> {
         film.setMpa(mpa);
 
         Director director = new Director();
-
-        director.setDirectorId(resultSet.getInt("director_id"));
+        director.setId(resultSet.getLong("director_id"));
         director.setName(resultSet.getString("director_name"));
         film.setDirector(director);
-
         film.setGenres(new ArrayList<>());
         return film;
     }

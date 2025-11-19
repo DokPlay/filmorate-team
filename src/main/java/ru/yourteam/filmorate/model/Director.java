@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class Director {
-    int directorId;
-    String name;
+
+    private long id;
+
+    private String name;
 }
