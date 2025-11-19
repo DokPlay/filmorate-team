@@ -1,4 +1,3 @@
-// Сервисный слой для генерации рекомендаций фильмов.
 package ru.yourteam.filmorate.service;
 
 import java.util.ArrayList;
@@ -11,14 +10,16 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yourteam.filmorate.dal.repositories.RecommendationRepository;//pr от Дмитрия
-import ru.yourteam.filmorate.dal.repositories.RecommendationRepository.UserLikeRow;//pr от Дмитрия
 import ru.yourteam.filmorate.dto.RecommendationDto;
 import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для 404
-import ru.yourteam.filmorate.mappers.recommendationMappers.RecommendationMapper;
 import ru.yourteam.filmorate.model.Film;
+import ru.yourteam.filmorate.mapper.recommendation.RecommendationMapper;
+import ru.yourteam.filmorate.repository.RecommendationRepository;
+import ru.yourteam.filmorate.repository.RecommendationRepository.UserLikeRow;
 
-// Сервисный слой для генерации рекомендаций фильмов.
+/**
+ * Сервисный слой для генерации рекомендаций фильмов.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

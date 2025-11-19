@@ -1,5 +1,4 @@
-// Контроллер для выдачи популярных фильмов по жанрам и годам.
-package ru.yourteam.filmorate.controller; // Если что, вдруг перед финалом скорректирую.
+package ru.yourteam.filmorate.controller;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -11,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yourteam.filmorate.dto.PopularFilmDto; // Если что, вдруг перед финалом скорректирую.
+import ru.yourteam.filmorate.dto.PopularFilmDto;
 import ru.yourteam.filmorate.service.PopularFilmService;
 
+/**
+ * Контроллер для выдачи популярных фильмов по жанрам и годам.
+ */
 @Slf4j
 @Validated
 @RestController

@@ -1,10 +1,11 @@
-// DTO для передачи рекомендаций фильмов пользователю.
 package ru.yourteam.filmorate.dto;
 
 import java.time.LocalDate;
 import lombok.Data;
 
-// DTO для передачи рекомендаций фильмов пользователю.
+/**
+ * DTO для передачи рекомендаций фильмов пользователю.
+ */
 @Data
 public class RecommendationDto {
 

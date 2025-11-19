@@ -1,4 +1,3 @@
-// Контроллер для получения персональных рекомендаций фильмов.
 package ru.yourteam.filmorate.controller;
 
 import java.util.List;
@@ -10,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yourteam.filmorate.dto.RecommendationDto;
 import ru.yourteam.filmorate.service.RecommendationService;
 
-// Контроллер для получения персональных рекомендаций фильмов.
+/**
+ * Контроллер для получения персональных рекомендаций фильмов.
+ */
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor

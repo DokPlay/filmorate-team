@@ -1,4 +1,3 @@
-// Контроллер для работы с фильмами и их режиссёрами.
 package ru.yourteam.filmorate.controller;
 
 import jakarta.validation.Valid;
@@ -17,6 +16,9 @@ import java.util.Collection;
 import ru.yourteam.filmorate.dto.FilmDto;
 import java.util.List;
 
+/**
+ * Контроллер для работы с фильмами и их режиссёрами.
+ */
 @Validated
 @RestController
 @RequestMapping("/directors")

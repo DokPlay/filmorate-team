@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yourteam.filmorate.dto.CommonFilmDto;
-import ru.yourteam.filmorate.dto.CommonFilmRowMapper;
+import ru.yourteam.filmorate.mapper.CommonFilmRowMapper;
 
 import java.util.List;
 

@@ -1,4 +1,3 @@
-// Сервисный слой для управления режиссёрами и их фильмами.
 package ru.yourteam.filmorate.service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервисный слой для управления режиссёрами и их фильмами.
+ */
 @Slf4j
 @Service
 public class DirectorServiceImpl implements DirectorService {

@@ -1,9 +1,11 @@
-// Сервисный слой для выборки популярных фильмов по фильтрам.
 package ru.yourteam.filmorate.service;
 
 import java.util.List;
 import ru.yourteam.filmorate.dto.PopularFilmDto;
 
+/**
+ * Сервисный слой для выборки популярных фильмов по фильтрам.
+ */
 public interface PopularFilmService {
 
     /**
