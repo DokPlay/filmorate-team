@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yourteam.filmorate.dal.repositories.PopularFilmRepository;
 import ru.yourteam.filmorate.dto.PopularFilmDto;
-import ru.yourteam.filmorate.exceptions.ValidationException; // PR от Андрея
+import ru.yourteam.filmorate.exception.ValidationException; // commit: обновлён пакет исключения
 import ru.yourteam.filmorate.service.PopularFilmServiceImpl;
 
 /**

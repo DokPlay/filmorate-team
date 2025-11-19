@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import ru.yourteam.filmorate.dal.repositories.RecommendationRepository;//pr от Дмитрия
 import ru.yourteam.filmorate.dal.repositories.RecommendationRepository.UserLikeRow;//pr от Дмитрия
 import ru.yourteam.filmorate.dto.RecommendationDto;
-import ru.yourteam.filmorate.exceptions.NotFoundException;//Здесь использован NotFoundException из ветки add-reviews 
-//(ru.yourteam.filmorate.exceptions.NotFoundException).
-//потом перед финалом если  актуальной ветке он лежит в другом пакете — поправлю импорт.
+import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для 404
 import ru.yourteam.filmorate.mappers.recommendationMappers.RecommendationMapper;
 import ru.yourteam.filmorate.model.Film;
 

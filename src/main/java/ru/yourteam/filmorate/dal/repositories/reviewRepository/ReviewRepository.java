@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
 import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.ReviewRowMapper;
 import ru.yourteam.filmorate.dal.mappers.UserRowMapper;
-import ru.yourteam.filmorate.exceptions.NotFoundException;
+import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для корректной обработки 404
 import ru.yourteam.filmorate.model.Film;
 import ru.yourteam.filmorate.model.Review;
 import ru.yourteam.filmorate.model.User;

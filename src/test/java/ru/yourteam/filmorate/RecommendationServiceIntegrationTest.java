@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.yourteam.filmorate.dto.RecommendationDto;
-import ru.yourteam.filmorate.exceptions.NotFoundException; // PR от Дмитрия
+import ru.yourteam.filmorate.exception.NotFoundException; // commit: выровнен пакет исключения
 import ru.yourteam.filmorate.service.RecommendationService;
 
 /**
