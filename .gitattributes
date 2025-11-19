@@ -35,3 +35,5 @@ pom.xml     text eol=lf
 *.war binary
 *.7z  binary
 *.gz  binary
+
+mvnw        text eol=lf
