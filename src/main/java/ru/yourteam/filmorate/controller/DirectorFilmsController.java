@@ -2,6 +2,7 @@ package ru.yourteam.filmorate.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class DirectorFilmsController {
 
     // изменение режиссера
     @PutMapping
-    public ResponseEntity<DirectorDto> update(@RequestBody DirectorDto director) {
+    public ResponseEntity<DirectorDto> update(@Valid @RequestBody DirectorDto director) {
         return ResponseEntity.ok(directorServiceImpl.update(director));
     }
 
@@ -69,7 +70,7 @@ public class DirectorFilmsController {
     @GetMapping("/{id}/films")
     public List<FilmDto> getFilms(
         @PathVariable long id,
-        @RequestParam("sort") String sort) {
+        @RequestParam("sort") @NotBlank String sort) {
         return directorServiceImpl.getFilmsByDirector(id, SortMode.from(sort)); // SortMode.parse/validate бросит 400
     }
 }
