@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yourteam.filmorate.dto.review.ReviewDto;
 import ru.yourteam.filmorate.service.ReviewService;
@@ -20,8 +22,9 @@ public class ReviewController {
     private final ReviewService service;
 
     @PostMapping
-    public ReviewDto createReview(@Valid @RequestBody ReviewDto reviewDto) {
-        return service.createReview(reviewDto);
+    public ResponseEntity<ReviewDto> createReview(@Valid @RequestBody ReviewDto reviewDto) {
+        ReviewDto createdReview = service.createReview(reviewDto);
+        return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -30,8 +33,9 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ReviewDto deleteReview(@PathVariable int id) {
-        return service.deleteReview(id);
+    public ResponseEntity<Void> deleteReview(@PathVariable int id) {
+        service.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
