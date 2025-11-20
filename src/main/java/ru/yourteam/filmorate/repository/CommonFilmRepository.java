@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yourteam.filmorate.dto.CommonFilmDto;
-import ru.yourteam.filmorate.mapper.CommonFilmRowMapper;
+import ru.yourteam.filmorate.dto.CommonFilmDtoDto;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class CommonFilmRepository extends BaseRepository<CommonFilmDto> {
                                                     "ORDER BY likes DESC, f.film_id ASC " +
                                                     "LIMIT ? OFFSET ?";
 
-    public CommonFilmRepository(JdbcTemplate jdbc, CommonFilmRowMapper mapper) {
+    public CommonFilmRepository(JdbcTemplate jdbc, CommonFilmDtoDto mapper) {
         super(jdbc, mapper);
     }
 

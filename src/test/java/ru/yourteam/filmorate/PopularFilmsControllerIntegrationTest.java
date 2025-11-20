@@ -50,27 +50,26 @@ public class PopularFilmsControllerIntegrationTest {
 
     @BeforeEach
     void cleanTestData() {
-        // Чистим все тестовые данные, которые могут остаться от других интеграционных тестов.
-        // Используем диапазоны id, не пересекающиеся с миграционными данными.
+        // Чистим только наши данные по диапазону id, чтобы не трогать данные миграций.
         jdbcTemplate.update(
                 "DELETE FROM likes WHERE user_id >= ? OR film_id >= ?",
-                2000,
-                1000
+                USER_1,
+                FILM_1
         );
         jdbcTemplate.update(
                 "DELETE FROM film_genre WHERE film_id >= ?",
-                1000
+                FILM_1
         );
         jdbcTemplate.update(
                 "DELETE FROM films WHERE film_id >= ?",
-                1000
+                FILM_1
         );
         jdbcTemplate.update(
                 "DELETE FROM users WHERE user_id >= ?",
-                2000
+                USER_1
         );
         jdbcTemplate.update(
-                "DELETE FROM mpa WHERE mpa_id >= ?",
+                "DELETE FROM mpa WHERE mpa_id = ?",
                 TEST_MPA_ID
         );
         jdbcTemplate.update(

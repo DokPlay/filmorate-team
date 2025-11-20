@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 
 import org.springframework.stereotype.Service;
-import ru.yourteam.filmorate.dto.review.ReviewDto;
-import ru.yourteam.filmorate.mapper.review.ReviewMapper;
-import ru.yourteam.filmorate.repository.ReviewRepository;
+import ru.yourteam.filmorate.dal.repositories.reviewRepository.ReviewRepository;
+import ru.yourteam.filmorate.dto.reviewDto.ReviewDto;
+import ru.yourteam.filmorate.mappers.reviewMappers.ReviewMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

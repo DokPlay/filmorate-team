@@ -1,3 +1,4 @@
+// Контроллер для выдачи списка общих фильмов у пользователей.
 package ru.yourteam.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,6 @@ import ru.yourteam.filmorate.service.CommonFilmService;
 
 import java.util.List;
 
-/**
- * Контроллер для выдачи списка общих фильмов у пользователей.
- */
 @RestController
 @RequestMapping("/films/common")
 public class CommonFilmsController {
