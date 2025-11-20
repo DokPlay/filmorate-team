@@ -13,6 +13,7 @@ spring:
       mode: never
   flyway:
     enabled: true
+    clean-disabled: true
 
 logging:
   level:
