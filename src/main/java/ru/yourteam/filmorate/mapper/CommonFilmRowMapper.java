@@ -13,6 +13,8 @@ public class CommonFilmRowMapper implements RowMapper<CommonFilmDto> {
         CommonFilmDto commonFilmDto = new CommonFilmDto();
         commonFilmDto.setId(resultSet.getLong("id"));
         commonFilmDto.setName(resultSet.getString("name"));
+        commonFilmDto.setLikes(resultSet.getInt("likes"));
+        commonFilmDto.setReleaseYear(resultSet.getInt("release_year"));
         return commonFilmDto;
     }
 }
