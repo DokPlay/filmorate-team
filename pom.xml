@@ -70,6 +70,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- CRaC support for Spring Boot internals -->
+        <dependency>
+            <groupId>org.crac</groupId>
+            <artifactId>crac</artifactId>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
