@@ -1,15 +1,15 @@
 // Сервисный слой для управления режиссёрами и их фильмами.
 package ru.yourteam.filmorate.service;
 
-import ru.yourteam.filmorate.dto.DirectorDto;
+import ru.yourteam.filmorate.model.Director;
 
 import java.util.List;
 
-public interface  DirectorService {
-    DirectorDto create(DirectorDto dto);
-    DirectorDto update(DirectorDto dto);
-    DirectorDto getById(long id);
-    List<DirectorDto> getAll();
+public interface DirectorService {
+    Director create(Director dto);
+    Director update(Director dto);
+    Director getById(long id);
+    List<Director> getAll();
     void deleteById(long id);
 
     // TODO

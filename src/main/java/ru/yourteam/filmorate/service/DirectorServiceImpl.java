@@ -4,9 +4,9 @@ package ru.yourteam.filmorate.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yourteam.filmorate.dto.DirectorDto;
 import ru.yourteam.filmorate.dto.FilmDto;
 import ru.yourteam.filmorate.exception.ValidationException;
+import ru.yourteam.filmorate.model.Director;
 import ru.yourteam.filmorate.repository.DirectorRepository;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDto create(DirectorDto dto) {
+    public Director create(Director dto) {
         validateDirector(dto);
         long id = directorRepository.insert(dto.getName());
         dto.setId(id);
@@ -32,7 +32,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDto update(DirectorDto dto) { // 200 — обновлённый объект; 404 — нет id; 400 — невалидный name
+    public Director update(Director dto) { // 200 — обновлённый объект; 404 — нет id; 400 — невалидный name
         validateDirector(dto);
         // проверим, что режиссёр существует (бросит 404, если нет)
         getById(dto.getId());
@@ -41,8 +41,8 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDto getById(long id) {
-        Optional<DirectorDto> dto = directorRepository.getById(id);
+    public Director getById(long id) {
+        Optional<Director> dto = directorRepository.getById(id);
         if (dto.isEmpty()) {
             throw new EntityNotFoundException("Режиссер с id: " + id + " не найден"); // вернем 404
         }
@@ -50,7 +50,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public List<DirectorDto> getAll() {
+    public List<Director> getAll() {
         return directorRepository.getAll();
     }
 
@@ -76,7 +76,7 @@ public class DirectorServiceImpl implements DirectorService {
         return filmDtoList;
     }
 
-    private void validateDirector(DirectorDto director) {
+    private void validateDirector(Director director) {
         if (director.getName() == null || director.getName().isEmpty() || director.getName().isBlank()) {
             log.error("Передано пустое имя режиссера");
             throw new ValidationException("Имя режиссера не может быть пустым");

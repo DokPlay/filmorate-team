@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dto.DirectorDto;
 import ru.yourteam.filmorate.dto.FilmDto;
 import ru.yourteam.filmorate.exception.InternalServerException;
+import ru.yourteam.filmorate.model.Director;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -17,19 +17,19 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class DirectorRepository extends BaseRepository<DirectorDto> {
+public class DirectorRepository extends BaseRepository<Director> {
 
-    private static final RowMapper<DirectorDto> DIRECTOR_MAPPER = (rs, rowNum) -> {
-        DirectorDto dto = new DirectorDto();
-        dto.setId(rs.getLong("id"));
-        dto.setName(rs.getString("name"));
-        return dto;
+    private static final RowMapper<Director> DIRECTOR_MAPPER = (rs, rowNum) -> {
+        Director director = new Director();
+        director.setId(rs.getLong("director_id"));
+        director.setName(rs.getString("director_name"));
+        return director;
     };
 
     private static final RowMapper<FilmDto> FILM_MAPPER = (rs, rowNum) -> {
         FilmDto dto = new FilmDto();
-        dto.setId(rs.getLong("id"));
-        dto.setName(rs.getString("name"));
+        dto.setId(rs.getLong("film_id"));
+        dto.setName(rs.getString("film_name"));
         dto.setDescription(rs.getString("description"));
         dto.setReleaseYear((Integer) rs.getObject("release_year"));
         dto.setDuration((Integer) rs.getObject("duration"));
@@ -37,48 +37,50 @@ public class DirectorRepository extends BaseRepository<DirectorDto> {
     };
 
     private static final String FIND_BY_ID_QUERY =
-        "SELECT id, name FROM directors WHERE id = ?";
+        "SELECT director_id, director_name FROM directors WHERE director_id = ?";
     private static final String FIND_ALL_QUERY =
-        "SELECT id, name FROM directors";
+        "SELECT director_id, director_name FROM directors";
     private static final String DELETE_DIRECTOR =
-        "DELETE FROM directors WHERE id = ?";
+        "DELETE FROM directors WHERE director_id = ?";
     private static final String DELETE_DIRECTOR_FILM_LINK =
-        "DELETE FROM directors_films_link WHERE director_id = ?";
+        "DELETE FROM film_director WHERE director_id = ?";
     private static final String UPDATE_DIRECTOR =
-        "UPDATE directors SET name = ? WHERE id = ?";
+        "UPDATE directors SET director_name = ? WHERE director_id = ?";
     private static final String INSERT_QUERY =
-        "INSERT INTO directors (name) VALUES (?)";
+        "INSERT INTO directors (director_name) VALUES (?)";
 
     private static final String FIND_FILMS_BY_LIKES =
-        "SELECT f.* " +
+        "SELECT f.film_id, f.film_name, f.description, "
+            + "EXTRACT(YEAR FROM f.release_date) AS release_year, f.duration " +
             "FROM films f " +
-            "JOIN film_director fd ON fd.film_id = f.id " +
-            "LEFT JOIN likes l ON l.film_id = f.id " +
+            "JOIN film_director fd ON fd.film_id = f.film_id " +
+            "LEFT JOIN likes l ON l.film_id = f.film_id " +
             "WHERE fd.director_id = ? " +
-            "GROUP BY f.id " +
-            "ORDER BY COUNT(l.user_id) DESC, f.id ASC " +
+            "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration " +
+            "ORDER BY COUNT(l.user_id) DESC, f.film_id ASC " +
             "LIMIT ? OFFSET ?";
 
     private static final String FIND_FILMS_BY_YEAR =
-        "SELECT f.* " +
+        "SELECT f.film_id, f.film_name, f.description, "
+            + "EXTRACT(YEAR FROM f.release_date) AS release_year, f.duration " +
             "FROM films f " +
-            "JOIN film_director fd ON fd.film_id = f.id " +
-            "LEFT JOIN likes l ON l.film_id = f.id " +
+            "JOIN film_director fd ON fd.film_id = f.film_id " +
+            "LEFT JOIN likes l ON l.film_id = f.film_id " +
             "WHERE fd.director_id = ? " +
-            "GROUP BY f.id " +
-            "ORDER BY f.release_year DESC, f.id ASC " +
+            "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration " +
+            "ORDER BY f.release_date DESC, f.film_id ASC " +
             "LIMIT ? OFFSET ?";
 
     public DirectorRepository(JdbcTemplate jdbc) {
         super(jdbc, DIRECTOR_MAPPER);
     }
 
-    public Optional<DirectorDto> getById(long id) {
+    public Optional<Director> getById(long id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
-    public List<DirectorDto> getAll() {
-        List<DirectorDto> directors = findMany(FIND_ALL_QUERY);
+    public List<Director> getAll() {
+        List<Director> directors = findMany(FIND_ALL_QUERY);
         log.info("Получение всех режиссеров: {}", directors);
         return directors;
     }

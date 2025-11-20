@@ -6,13 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -22,19 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
  * - фильтрацию по жанру и году;
  * - валидацию параметров count и year.
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-public class PopularFilmsControllerIntegrationTest {
+public class PopularFilmsControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    // Отдельный тестовый рейтинг, чтобы не трогать данные миграций.
-    private static final int TEST_MPA_ID = 30;
 
     private static final int USER_1 = 4000;
     private static final int USER_2 = 4001;
@@ -47,37 +35,6 @@ public class PopularFilmsControllerIntegrationTest {
 
     private static final int GENRE_COMEDY = 1;
     private static final int GENRE_DRAMA = 2;
-
-    @BeforeEach
-    void cleanTestData() {
-        // Чистим только наши данные по диапазону id, чтобы не трогать данные миграций.
-        jdbcTemplate.update(
-                "DELETE FROM likes WHERE user_id >= ? OR film_id >= ?",
-                USER_1,
-                FILM_1
-        );
-        jdbcTemplate.update(
-                "DELETE FROM film_genre WHERE film_id >= ?",
-                FILM_1
-        );
-        jdbcTemplate.update(
-                "DELETE FROM films WHERE film_id >= ?",
-                FILM_1
-        );
-        jdbcTemplate.update(
-                "DELETE FROM users WHERE user_id >= ?",
-                USER_1
-        );
-        jdbcTemplate.update(
-                "DELETE FROM mpa WHERE mpa_id = ?",
-                TEST_MPA_ID
-        );
-        jdbcTemplate.update(
-                "INSERT INTO mpa (mpa_id, mpa_name) VALUES (?, ?)",
-                TEST_MPA_ID,
-                "TEST_MPA_POPULAR"
-        );
-    }
 
     /**
      * Базовый набор:

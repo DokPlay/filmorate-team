@@ -38,24 +38,11 @@ public abstract class AbstractIntegrationTest {
 
     @BeforeEach
     void prepareDatabase() {
-        // Удаляем только тестовые лайки
-        jdbcTemplate.update(
-            "DELETE FROM likes WHERE user_id >= ? OR film_id >= ?",
-            TEST_USER_MIN_ID,
-            TEST_FILM_MIN_ID
-        );
-
-        // Удаляем только тестовые фильмы
-        jdbcTemplate.update(
-            "DELETE FROM films WHERE film_id >= ?",
-            TEST_FILM_MIN_ID
-        );
-
-        // Удаляем только тестовых пользователей
-        jdbcTemplate.update(
-            "DELETE FROM users WHERE user_id >= ?",
-            TEST_USER_MIN_ID
-        );
+        // Полностью очищаем зависимые таблицы, чтобы убрать данные миграций
+        jdbcTemplate.update("DELETE FROM likes");
+        jdbcTemplate.update("DELETE FROM film_genre");
+        jdbcTemplate.update("DELETE FROM films");
+        jdbcTemplate.update("DELETE FROM users");
 
         // Чистим и создаём тестовый рейтинг MPA
         jdbcTemplate.update(
@@ -82,13 +69,21 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected void insertTestFilm(int filmId, String name) {
+        insertTestFilm(
+            filmId,
+            name,
+            LocalDate.of(2000, 1, 1)
+        );
+    }
+
+    protected void insertTestFilm(int filmId, String name, LocalDate releaseDate) {
         jdbcTemplate.update(
             "INSERT INTO films (film_id, film_name, description, release_date, duration, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?)",
             filmId,
             name,
             "Test description",
-            LocalDate.of(2000, 1, 1),
+            releaseDate,
             100,
             TEST_MPA_ID
         );
