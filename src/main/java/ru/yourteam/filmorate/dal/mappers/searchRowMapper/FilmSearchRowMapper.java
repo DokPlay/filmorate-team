@@ -9,6 +9,7 @@ import ru.yourteam.filmorate.model.Mpa;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Component
 public class FilmSearchRowMapper implements RowMapper<Film> {
@@ -31,7 +32,9 @@ public class FilmSearchRowMapper implements RowMapper<Film> {
         Director director = new Director();
         director.setId(resultSet.getLong("director_id"));
         director.setName(resultSet.getString("director_name"));
-        film.setDirector(director);
+
+        // Оборачиваем режиссера в коллекцию, потому что в сущности хранится ManyToMany
+        film.setDirectors(Collections.singletonList(director));
         film.setGenres(new ArrayList<>());
         return film;
     }
