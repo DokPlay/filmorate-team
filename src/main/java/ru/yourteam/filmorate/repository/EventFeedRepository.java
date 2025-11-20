@@ -1,13 +1,11 @@
 package ru.yourteam.filmorate.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yourteam.filmorate.dal.mappers.EventRowMapper;
-import ru.yourteam.filmorate.exception.NotFoundException;
 import ru.yourteam.filmorate.model.Event;
 import ru.yourteam.filmorate.model.EventType;
 import ru.yourteam.filmorate.model.Operation;
@@ -36,14 +34,10 @@ public class EventFeedRepository {
             "   ) " +
             "ORDER BY e.event_timestamp DESC, e.event_id DESC";
 
-    private static final String FIND_USER_QUERY = "SELECT 1 FROM users WHERE user_id = ?";
-
     private final JdbcTemplate jdbcTemplate;
     private final EventRowMapper eventRowMapper;
 
     public Event createEvent(int userId, EventType eventType, Operation operation, int entityId) {
-        ensureUserExists(userId);
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         long timestamp = System.currentTimeMillis();
 
@@ -70,15 +64,6 @@ public class EventFeedRepository {
     }
 
     public List<Event> findEventsByUserId(int userId) {
-        ensureUserExists(userId);
         return jdbcTemplate.query(FIND_BY_USER_QUERY, eventRowMapper, userId, userId, userId);
-    }
-
-    private void ensureUserExists(int userId) {
-        try {
-            jdbcTemplate.queryForObject(FIND_USER_QUERY, Integer.class, userId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("Пользователь с id=" + userId + " не найден");
-        }
     }
 }
