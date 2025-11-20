@@ -1,3 +1,4 @@
+-- noinspection SqlResolve
 -- V8__directors.sql
 -- Миграция оставлена пустой намеренно.
 -- Таблицы directors и film_director создаются и индексируются
