@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yourteam.filmorate.dto.DirectorDto;
-import ru.yourteam.filmorate.repository.DirectorRepository;
+import ru.yourteam.filmorate.model.Director;
 import ru.yourteam.filmorate.service.DirectorServiceImpl;
 import ru.yourteam.filmorate.service.SortMode;
 
@@ -22,30 +21,28 @@ import java.util.List;
 @RequestMapping("/directors")
 public class DirectorFilmsController {
 
-    private final DirectorRepository directorRepository;
     private final DirectorServiceImpl directorServiceImpl;
 
     @Autowired
-    public DirectorFilmsController(DirectorRepository directorRepository, DirectorServiceImpl directorServiceImpl) {
-        this.directorRepository = directorRepository;
+    public DirectorFilmsController(DirectorServiceImpl directorServiceImpl) {
         this.directorServiceImpl = directorServiceImpl;
     }
 
     // получение всех режиссеров
     @GetMapping
-    public ResponseEntity<Collection<DirectorDto>> getAll() {
+    public ResponseEntity<Collection<Director>> getAll() {
         return ResponseEntity.ok(directorServiceImpl.getAll());
     }
 
     // получение режиссера по id
     @GetMapping("/{id}")
-    public ResponseEntity<DirectorDto> getDirector(@PathVariable @Min(0) long id) {
+    public ResponseEntity<Director> getDirector(@PathVariable @Min(0) long id) {
         return ResponseEntity.ok(directorServiceImpl.getById(id));
     }
 
     // создание режиссера
     @PostMapping
-    public ResponseEntity<DirectorDto> create(@Valid @RequestBody DirectorDto director) {
+    public ResponseEntity<Director> create(@Valid @RequestBody Director director) {
         directorServiceImpl.create(director);
         return new ResponseEntity<>(director, HttpStatus.CREATED); // возвращаем 201
     }
@@ -53,7 +50,7 @@ public class DirectorFilmsController {
 
     // изменение режиссера
     @PutMapping
-    public ResponseEntity<DirectorDto> update(@RequestBody DirectorDto director) {
+    public ResponseEntity<Director> update(@RequestBody Director director) {
         return ResponseEntity.ok(directorServiceImpl.update(director));
     }
 

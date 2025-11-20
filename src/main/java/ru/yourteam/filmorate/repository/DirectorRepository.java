@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dto.DirectorDto;
 import ru.yourteam.filmorate.dto.FilmDto;
 import ru.yourteam.filmorate.exception.InternalServerException;
+import ru.yourteam.filmorate.model.Director;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -17,13 +17,13 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class DirectorRepository extends BaseRepository<DirectorDto> {
+public class DirectorRepository extends BaseRepository<Director> {
 
-    private static final RowMapper<DirectorDto> DIRECTOR_MAPPER = (rs, rowNum) -> {
-        DirectorDto dto = new DirectorDto();
-        dto.setId(rs.getLong("director_id"));
-        dto.setName(rs.getString("director_name"));
-        return dto;
+    private static final RowMapper<Director> DIRECTOR_MAPPER = (rs, rowNum) -> {
+        Director director = new Director();
+        director.setId(rs.getLong("director_id"));
+        director.setName(rs.getString("director_name"));
+        return director;
     };
 
     private static final RowMapper<FilmDto> FILM_MAPPER = (rs, rowNum) -> {
@@ -75,12 +75,12 @@ public class DirectorRepository extends BaseRepository<DirectorDto> {
         super(jdbc, DIRECTOR_MAPPER);
     }
 
-    public Optional<DirectorDto> getById(long id) {
+    public Optional<Director> getById(long id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
-    public List<DirectorDto> getAll() {
-        List<DirectorDto> directors = findMany(FIND_ALL_QUERY);
+    public List<Director> getAll() {
+        List<Director> directors = findMany(FIND_ALL_QUERY);
         log.info("Получение всех режиссеров: {}", directors);
         return directors;
     }
