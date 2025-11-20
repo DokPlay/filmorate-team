@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.yourteam.filmorate.dal.repositories.PopularFilmRepository;
+import ru.yourteam.filmorate.repository.PopularFilmRepository;
 import ru.yourteam.filmorate.dto.PopularFilmDto;
 import ru.yourteam.filmorate.exception.ValidationException; // commit: обновлён пакет исключения
 import ru.yourteam.filmorate.service.PopularFilmServiceImpl;

@@ -1,4 +1,3 @@
-// Сервисный слой для управления режиссёрами и их фильмами.
 package ru.yourteam.filmorate.service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервисный слой для управления режиссёрами и их фильмами.
+ */
 @Slf4j
 @Service
 public class DirectorServiceImpl implements DirectorService {
@@ -25,7 +27,6 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public DirectorDto create(DirectorDto dto) {
-        validateDirector(dto);
         long id = directorRepository.insert(dto.getName());
         dto.setId(id);
         return dto;
@@ -33,7 +34,9 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public DirectorDto update(DirectorDto dto) { // 200 — обновлённый объект; 404 — нет id; 400 — невалидный name
-        validateDirector(dto);
+        if (dto.getId() == null) {
+            throw new ValidationException("Не указан идентификатор режиссера для обновления");
+        }
         // проверим, что режиссёр существует (бросит 404, если нет)
         getById(dto.getId());
         directorRepository.update(dto.getId(), dto.getName());
@@ -74,12 +77,5 @@ public class DirectorServiceImpl implements DirectorService {
                 throw new IllegalArgumentException("Unknown sort mode: " + sort);
         }
         return filmDtoList;
-    }
-
-    private void validateDirector(DirectorDto director) {
-        if (director.getName() == null || director.getName().isEmpty() || director.getName().isBlank()) {
-            log.error("Передано пустое имя режиссера");
-            throw new ValidationException("Имя режиссера не может быть пустым");
-        }
     }
 }

@@ -28,7 +28,7 @@ add-common-films
   
 Дополнительно сделал:
 * src/main/java/ru/yourteam/filmorate/dto/CommonFilmDto
-* src/main/java/ru/yourteam/filmorate/dto/CommonFilmDtoDto  
+* src/main/java/ru/yourteam/filmorate/dto/CommonFilmRowMapper
   
 add-reviews
 =

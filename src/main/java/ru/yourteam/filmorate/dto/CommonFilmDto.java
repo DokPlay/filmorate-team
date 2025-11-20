@@ -1,10 +1,12 @@
-// DTO для описания фильмов, общих у нескольких пользователей.
 package ru.yourteam.filmorate.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * DTO для описания фильмов, общих у нескольких пользователей.
+ */
 @Data
 public final class CommonFilmDto {
     private long id;
