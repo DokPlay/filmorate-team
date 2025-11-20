@@ -26,7 +26,7 @@ public class EventFeedRepository {
             "VALUES (?, ?, ?, ?, ?)";
 
     private static final String FIND_BY_USER_QUERY =
-        "SELECT * FROM events WHERE user_id = ? ORDER BY event_timestamp, event_id";
+        "SELECT * FROM events WHERE user_id = ? ORDER BY event_timestamp DESC, event_id DESC";
 
     private static final String FIND_USER_QUERY = "SELECT 1 FROM users WHERE user_id = ?";
 
