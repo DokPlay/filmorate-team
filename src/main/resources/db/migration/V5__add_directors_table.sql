@@ -1,5 +1,5 @@
 -- V5__add_directors_table.sql
--- Добавление таблицы режиссёров и связующей таблицы фильм–режиссёр.
+-- Добавление таблицы режиссёров и связующей таблицы фильм — режиссёр.
 
 -- Таблица режиссёров
 CREATE TABLE IF NOT EXISTS directors (
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS directors (
                                          director_name VARCHAR(255) NOT NULL
 );
 
--- Связь фильм—режиссёр (многие-ко-многим)
+-- Связь фильм — режиссёр (многие-ко-многим)
 CREATE TABLE IF NOT EXISTS film_director (
                                              film_id     INTEGER NOT NULL,
                                              director_id INTEGER NOT NULL,

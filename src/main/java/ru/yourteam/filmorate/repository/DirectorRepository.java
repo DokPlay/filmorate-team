@@ -52,21 +52,21 @@ public class DirectorRepository extends BaseRepository<DirectorDto> {
     private static final String FIND_FILMS_BY_LIKES =
         "SELECT f.* " +
             "FROM films f " +
-            "JOIN film_director fd ON fd.film_id = f.id " +
-            "LEFT JOIN likes l ON l.film_id = f.id " +
+            "JOIN film_director fd ON fd.film_id = f.film_id " +
+            "LEFT JOIN likes l ON l.film_id = f.film_id " +
             "WHERE fd.director_id = ? " +
-            "GROUP BY f.id " +
-            "ORDER BY COUNT(l.user_id) DESC, f.id ASC " +
+            "GROUP BY f.film_id " +
+            "ORDER BY COUNT(l.user_id) DESC, f.film_id ASC " +
             "LIMIT ? OFFSET ?";
 
     private static final String FIND_FILMS_BY_YEAR =
         "SELECT f.* " +
             "FROM films f " +
-            "JOIN film_director fd ON fd.film_id = f.id " +
-            "LEFT JOIN likes l ON l.film_id = f.id " +
+            "JOIN film_director fd ON fd.film_id = f.film_id " +
+            "LEFT JOIN likes l ON l.film_id = f.film_id " +
             "WHERE fd.director_id = ? " +
-            "GROUP BY f.id " +
-            "ORDER BY f.release_year DESC, f.id ASC " +
+            "GROUP BY f.film_id " +
+            "ORDER BY f.release_year DESC, f.film_id ASC " +
             "LIMIT ? OFFSET ?";
 
     public DirectorRepository(JdbcTemplate jdbc) {

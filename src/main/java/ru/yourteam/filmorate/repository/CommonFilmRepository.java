@@ -17,10 +17,10 @@ public class CommonFilmRepository extends BaseRepository<CommonFilmDto> {
                                                     "JOIN likes lb ON la.film_id = lb.film_id " +
                                                     "AND la.user_id = ? " +
                                                     "AND lb.user_id = ? " +
-                                                    "JOIN films f  ON f.id = la.film_id " +
-                                                    "LEFT JOIN likes l ON l.film_id = f.id " +
-                                                    "GROUP BY f.id " +
-                                                    "ORDER BY COUNT(l.user_id) DESC, f.id ASC " +
+                                                    "JOIN films f  ON f.film_id = la.film_id " +
+                                                    "LEFT JOIN likes l ON l.film_id = f.film_id " +
+                                                    "GROUP BY f.film_id " +
+                                                    "ORDER BY COUNT(l.user_id) DESC, f.film_id ASC " +
                                                     "LIMIT ? OFFSET ?";
 
     public CommonFilmRepository(JdbcTemplate jdbc, CommonFilmRowMapper mapper) {
