@@ -53,19 +53,27 @@ public class ReviewService {
     }
 
     public ReviewDto addLikeToReview(int id, int userId) {
-        return ReviewMapper.mapToReviewDto(reviewRepository.addLikeToReview(id, userId));
+        ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.addLikeToReview(id, userId));
+        eventFeedService.writeEvent(review.getUserId(), EventType.LIKE, Operation.ADD, review.getReviewId());
+        return review;
     }
 
     public ReviewDto removeLikeFromReview(int id, int userId) {
-        return ReviewMapper.mapToReviewDto(reviewRepository.removeLikeFromReview(id, userId));
+        ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.removeLikeFromReview(id, userId));
+        eventFeedService.writeEvent(review.getUserId(), EventType.LIKE, Operation.REMOVE, review.getReviewId());
+        return review;
     }
 
     public ReviewDto addDislikeToReview(int id, int userId) {
-        return ReviewMapper.mapToReviewDto(reviewRepository.addDislikeToReview(id, userId));
+        ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.addDislikeToReview(id, userId));
+        eventFeedService.writeEvent(review.getUserId(), EventType.LIKE, Operation.ADD, review.getReviewId());
+        return review;
     }
 
     public ReviewDto removeDislikeFromReview(int id, int userId) {
-        return ReviewMapper.mapToReviewDto(reviewRepository.removeDislikeFromReview(id, userId));
+        ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.removeDislikeFromReview(id, userId));
+        eventFeedService.writeEvent(review.getUserId(), EventType.LIKE, Operation.REMOVE, review.getReviewId());
+        return review;
     }
 
 
