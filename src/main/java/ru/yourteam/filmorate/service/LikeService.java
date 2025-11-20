@@ -2,6 +2,7 @@ package ru.yourteam.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yourteam.filmorate.exception.NotFoundException;
 import ru.yourteam.filmorate.model.EventType;
 import ru.yourteam.filmorate.model.Operation;
@@ -18,12 +19,14 @@ public class LikeService {
     private final UserRepository userRepository;
     private final EventFeedService eventFeedService;
 
+    @Transactional
     public void addLike(int filmId, int userId) {
         validateEntities(filmId, userId);
         likeRepository.addLike(filmId, userId);
         eventFeedService.writeEvent(userId, EventType.LIKE, Operation.ADD, filmId);
     }
 
+    @Transactional
     public void removeLike(int filmId, int userId) {
         validateEntities(filmId, userId);
         int removed = likeRepository.removeLike(filmId, userId);

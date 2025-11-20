@@ -2,6 +2,7 @@ package ru.yourteam.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yourteam.filmorate.dal.repositories.reviewRepository.ReviewRepository;
 import ru.yourteam.filmorate.dto.reviewDto.ReviewDto;
 import ru.yourteam.filmorate.mappers.reviewMappers.ReviewMapper;
@@ -20,6 +21,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final EventFeedService eventFeedService;
 
+    @Transactional
     public ReviewDto createReview(ReviewDto reviewDto) {
         ReviewDto createdReview = ReviewMapper.mapToReviewDto(
             reviewRepository.createReview(ReviewMapper.mapToReview(reviewDto)));
@@ -28,6 +30,7 @@ public class ReviewService {
         return createdReview;
     }
 
+    @Transactional
     public ReviewDto updateReview(ReviewDto reviewDto) {
         ReviewDto updatedReview = ReviewMapper.mapToReviewDto(
             reviewRepository.updateReview(ReviewMapper.mapToReview(reviewDto)));
@@ -36,6 +39,7 @@ public class ReviewService {
         return updatedReview;
     }
 
+    @Transactional
     public ReviewDto deleteReview(int id) {
         ReviewDto deletedReview = ReviewMapper.mapToReviewDto(reviewRepository.deleteReview(id));
         eventFeedService.writeEvent(
@@ -52,24 +56,28 @@ public class ReviewService {
             map(ReviewMapper::mapToReviewDto).collect(Collectors.toList());
     }
 
+    @Transactional
     public ReviewDto addLikeToReview(int id, int userId) {
         ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.addLikeToReview(id, userId));
         eventFeedService.writeEvent(userId, EventType.LIKE, Operation.ADD, review.getReviewId());
         return review;
     }
 
+    @Transactional
     public ReviewDto removeLikeFromReview(int id, int userId) {
         ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.removeLikeFromReview(id, userId));
         eventFeedService.writeEvent(userId, EventType.LIKE, Operation.REMOVE, review.getReviewId());
         return review;
     }
 
+    @Transactional
     public ReviewDto addDislikeToReview(int id, int userId) {
         ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.addDislikeToReview(id, userId));
         eventFeedService.writeEvent(userId, EventType.LIKE, Operation.ADD, review.getReviewId());
         return review;
     }
 
+    @Transactional
     public ReviewDto removeDislikeFromReview(int id, int userId) {
         ReviewDto review = ReviewMapper.mapToReviewDto(reviewRepository.removeDislikeFromReview(id, userId));
         eventFeedService.writeEvent(userId, EventType.LIKE, Operation.REMOVE, review.getReviewId());
