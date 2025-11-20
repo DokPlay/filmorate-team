@@ -40,6 +40,8 @@ public abstract class AbstractIntegrationTest {
     void prepareDatabase() {
         // Полностью очищаем зависимые таблицы, чтобы убрать данные миграций
         jdbcTemplate.update("DELETE FROM likes");
+        jdbcTemplate.update("DELETE FROM events");
+        jdbcTemplate.update("DELETE FROM friendships");
         jdbcTemplate.update("DELETE FROM film_genre");
         jdbcTemplate.update("DELETE FROM films");
         jdbcTemplate.update("DELETE FROM users");

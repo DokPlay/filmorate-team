@@ -26,8 +26,14 @@ public class EventFeedRepository {
             "VALUES (?, ?, ?, ?, ?)";
 
     private static final String FIND_BY_USER_QUERY =
-        "SELECT e.* FROM events e " +
+        "SELECT e.* " +
+            "FROM events e " +
             "WHERE e.user_id = ? " +
+            "   OR e.user_id IN (" +
+            "       SELECT f.friend_id FROM friendships f WHERE f.user_id = ? " +
+            "       UNION " +
+            "       SELECT f.user_id FROM friendships f WHERE f.friend_id = ? " +
+            "   ) " +
             "ORDER BY e.event_timestamp DESC, e.event_id DESC";
 
     private static final String FIND_USER_QUERY = "SELECT 1 FROM users WHERE user_id = ?";
@@ -65,7 +71,7 @@ public class EventFeedRepository {
 
     public List<Event> findEventsByUserId(int userId) {
         ensureUserExists(userId);
-        return jdbcTemplate.query(FIND_BY_USER_QUERY, eventRowMapper, userId);
+        return jdbcTemplate.query(FIND_BY_USER_QUERY, eventRowMapper, userId, userId, userId);
     }
 
     private void ensureUserExists(int userId) {
