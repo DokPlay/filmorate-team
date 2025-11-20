@@ -1,6 +1,5 @@
-package ru.yourteam.filmorate.repository;
-// Таблица likes и films по именам колонок опираются на существующие мапперы FilmRowMapper
-// и SQL из веток add-common-films / add-reviews.
+package ru.yourteam.filmorate.dal.repositories;//это пакет от дмитрия в PR смотреть.
+//Таблица likes и films по именам колонок опираются на существующие мапперы FilmRowMapper и SQL из веток add-common-films / add-reviews.
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.mapper.review.FilmRowMapper;
+import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
 import ru.yourteam.filmorate.model.Film;
 
 @Repository

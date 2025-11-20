@@ -2,11 +2,10 @@ package ru.yourteam.filmorate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.yourteam.filmorate.repository.PopularFilmRepository;
+import ru.yourteam.filmorate.dal.repositories.PopularFilmRepository;
 import ru.yourteam.filmorate.dto.PopularFilmDto;
 
 /**
@@ -52,10 +51,10 @@ public class PopularFilmRepositoryIntegrationTest extends AbstractIntegrationTes
         insertTestUser(USER_3, "user3@test.ru", "user3");
 
         // фильмы
-        insertTestFilm(FILM_1, "Film 1", LocalDate.of(1999, 1, 1));
-        insertTestFilm(FILM_2, "Film 2", LocalDate.of(1999, 6, 1));
-        insertTestFilm(FILM_3, "Film 3", LocalDate.of(2000, 1, 1));
-        insertTestFilm(FILM_4, "Film 4", LocalDate.of(2000, 6, 1));
+        insertTestFilm(FILM_1, "Film 1");
+        insertTestFilm(FILM_2, "Film 2");
+        insertTestFilm(FILM_3, "Film 3");
+        insertTestFilm(FILM_4, "Film 4");
 
         // привязка жанров
         insertFilmGenre(FILM_1, GENRE_COMEDY);

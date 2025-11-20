@@ -16,8 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.yourteam.filmorate.repository.RecommendationRepository;// PR от Дмитрия
-import ru.yourteam.filmorate.repository.RecommendationRepository.UserLikeRow;// PR от Дмитрия
+import ru.yourteam.filmorate.dal.repositories.RecommendationRepository;// PR от Дмитрия
+import ru.yourteam.filmorate.dal.repositories.RecommendationRepository.UserLikeRow;// PR от Дмитрия
 import ru.yourteam.filmorate.dto.RecommendationDto;
 import ru.yourteam.filmorate.exception.NotFoundException; // commit: обновлён пакет исключения
 import ru.yourteam.filmorate.model.Film;// PR от Дмитрия

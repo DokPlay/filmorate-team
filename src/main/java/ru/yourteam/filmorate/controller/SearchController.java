@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yourteam.filmorate.dto.search.FilmSearchDto;
+import ru.yourteam.filmorate.dto.searchDto.FilmSearchDto;
 import ru.yourteam.filmorate.service.SearchService;
 
 import java.util.List;

@@ -3,33 +3,32 @@ package ru.yourteam.filmorate.exception;
 import java.time.OffsetDateTime;
 
 public class ApiError {
-    // commit: введено поле code, чтобы явно передавать HTTP-статус в читаемом виде
-    private final int code;
-    // commit: сообщение стало коротким и понятным клиенту, без технических деталей
-    private final String message;
-    // commit: details содержит расшифровку ошибки/валидации для дебага на стороне клиента
-    private final String details;
+    // commit: расширена модель ошибки для единообразного ответа с HTTP-статусом и путём запроса
+    private final int status;
+    // commit: фиксирована недостающая информация о коде и сообщении
+    private final String error;
+    private final String description;
     private final String path;
     private final OffsetDateTime timestamp;
 
-    public ApiError(int code, String message, String details, String path) {
-        this.code = code;
-        this.message = message;
-        this.details = details;
+    public ApiError(int status, String error, String description, String path) {
+        this.status = status;
+        this.error = error;
+        this.description = description;
         this.path = path;
         this.timestamp = OffsetDateTime.now();
     }
 
-    public int getCode() {
-        return code;
+    public int getStatus() {
+        return status;
     }
 
-    public String getMessage() {
-        return message;
+    public String getError() {
+        return error;
     }
 
-    public String getDetails() {
-        return details;
+    public String getDescription() {
+        return description;
     }
 
     public String getPath() {

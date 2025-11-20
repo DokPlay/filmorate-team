@@ -1,18 +1,1 @@
-spring:
-  application:
-    name: filmorate
-  profiles:
-    active: dev
-  jpa:
-    hibernate:
-      ddl-auto: none
-  sql:
-    init:
-      mode: never
-  flyway:
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-
-logging:
-  level:
-    root: INFO
+# Общая конфигурация приложения (позже добавим).
