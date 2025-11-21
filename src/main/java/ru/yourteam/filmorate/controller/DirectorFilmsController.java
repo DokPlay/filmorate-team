@@ -1,12 +1,13 @@
 // Контроллер для работы с фильмами и их режиссёрами.
 package ru.yourteam.filmorate.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,14 +20,10 @@ import ru.yourteam.filmorate.service.SortMode;
 @Validated
 @RestController
 @RequestMapping("/directors")
+@RequiredArgsConstructor
 public class DirectorFilmsController {
 
     private final DirectorService directorService;
-
-    @Autowired
-    public DirectorFilmsController(DirectorService directorService) {
-        this.directorService = directorService;
-    }
 
     // получение всех режиссеров
     @GetMapping
@@ -50,13 +47,13 @@ public class DirectorFilmsController {
 
     // изменение режиссера
     @PutMapping
-    public ResponseEntity<Director> update(@RequestBody Director director) {
+    public ResponseEntity<Director> update(@Valid @RequestBody Director director) {
         return ResponseEntity.ok(directorService.update(director));
     }
 
     // удаление режиссера
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable @Min(0) long id) { // 204 — удалён; 404 — не найден; 409 — если ON DELETE RESTRICT и есть связи.
+    public ResponseEntity<Void> delete(@PathVariable @Min(0) long id) { // 204 — удалён; 404 — не найден; 409 — если ON DELETE RESTRICT и есть связи.
         directorService.deleteById(id);
         return ResponseEntity.noContent().build(); // 204
     }
