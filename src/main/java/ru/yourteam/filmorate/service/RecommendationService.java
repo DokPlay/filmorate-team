@@ -37,9 +37,14 @@ public class RecommendationService {
      */
     public List<RecommendationDto> getRecommendationsForUser(int userId) {
         if (!recommendationRepository.userExists(userId)) {
+            // Явно возвращаем 404, чтобы клиент понимал, что дело именно в несуществующем пользователе,
+            // а не в отсутствии рекомендаций.
             throw new NotFoundException("Пользователь с id=" + userId + " не найден.");
         }
 
+        // Забираем все лайки одним запросом, чтобы в памяти собрать матрицу пользователь → фильмы.
+        // Это предсказуемо даже на больших выборках: данные лежат в компактных integer-множествах,
+        // и мы не размножаем их по отдельным SQL-запросам.
         List<UserLikeRow> allLikes = recommendationRepository.findAllLikes();
         if (allLikes.isEmpty()) {
             log.info("В таблице лайков пока нет записей — рекомендации для пользователя {} отсутствуют", userId);
@@ -75,14 +80,17 @@ public class RecommendationService {
 
         List<Integer> sortedFilmIds = sortFilmIdsByScore(scoreByFilmId);
 
-        List<Integer> limitedFilmIds;
-        if (sortedFilmIds.size() > DEFAULT_LIMIT) {
-            limitedFilmIds = sortedFilmIds.subList(0, DEFAULT_LIMIT);
-        } else {
-            limitedFilmIds = sortedFilmIds;
-        }
+        // Ограничиваем размер выдачи, чтобы не отдавать клиенту слишком много фильмов за раз
+        // и сохранить стабильную нагрузку на БД при последующей выборке деталей фильмов.
+        List<Integer> limitedFilmIds = limitFilmIds(sortedFilmIds);
 
+        // Репозиторий не должен возвращать null, но добавляем безопасную обёртку —
+        // так сервис ведёт себя предсказуемо даже при ошибках в инфраструктуре.
         List<Film> films = recommendationRepository.findFilmsByIds(limitedFilmIds);
+        if (films == null) {
+            log.warn("Репозиторий вернул null вместо списка фильмов. Ограничиваемся пустым результатом.");
+            return Collections.emptyList();
+        }
         Map<Integer, Film> filmById = mapFilmsById(films);
 
         List<RecommendationDto> result = new ArrayList<>(limitedFilmIds.size());
@@ -91,6 +99,13 @@ public class RecommendationService {
             if (film != null) {
                 int score = scoreByFilmId.getOrDefault(filmId, 0);
                 result.add(RecommendationMapper.mapToRecommendationDto(film, score));
+            } else {
+                // Зафиксируем пропуски, чтобы можно было диагностировать сломанные данные в БД.
+                log.warn(
+                        "Детали фильма с id={} не найдены при построении рекомендаций для пользователя {}",
+                        filmId,
+                        userId
+                );
             }
         }
 
@@ -198,6 +213,23 @@ public class RecommendationService {
             filmIds.add(entry.getKey());
         }
         return filmIds;
+    }
+
+    /**
+     * Обрезает список идентификаторов до безопасного размера выдачи.
+     * <p>
+     * Возвращает неизменяемую копию, чтобы защититься от случайных изменений при дальнейшей обработке.
+     */
+    private List<Integer> limitFilmIds(List<Integer> sortedFilmIds) {
+        if (sortedFilmIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (sortedFilmIds.size() <= DEFAULT_LIMIT) {
+            return List.copyOf(sortedFilmIds);
+        }
+
+        return List.copyOf(sortedFilmIds.subList(0, DEFAULT_LIMIT));
     }
 
     private Map<Integer, Film> mapFilmsById(List<Film> films) {

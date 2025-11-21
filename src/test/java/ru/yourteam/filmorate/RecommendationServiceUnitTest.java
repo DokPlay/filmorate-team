@@ -76,6 +76,35 @@ class RecommendationServiceUnitTest {
     }
 
     @Test
+    void getRecommendationsForUser_whenCandidateAlreadyLikedByTarget_isNotReturned() {
+        // Подготавливаем целевого пользователя, который уже поставил лайк фильму
+        int targetUserId = 15;
+        int alreadyLikedFilmId = 333;
+        int similarUserId = 99;
+
+        when(recommendationRepository.userExists(targetUserId)).thenReturn(true);
+
+        // Собираем лайки так, чтобы похожий пользователь лайкнул фильм, который уже есть у цели
+        List<UserLikeRow> likes = List.of(
+                new UserLikeRow(targetUserId, alreadyLikedFilmId),
+                new UserLikeRow(similarUserId, alreadyLikedFilmId)
+        );
+        when(recommendationRepository.findAllLikes()).thenReturn(likes);
+
+        // Репозиторий ничего не должен запрашивать, так как рекомендовать нечего
+        List<RecommendationDto> recommendations =
+                recommendationService.getRecommendationsForUser(targetUserId);
+
+        assertThat(recommendations)
+                .as("Фильм, который уже лайкнул пользователь, не должен попадать в рекомендации")
+                .isEmpty();
+
+        verify(recommendationRepository).userExists(targetUserId);
+        verify(recommendationRepository).findAllLikes();
+        verifyNoMoreInteractions(recommendationRepository);
+    }
+
+    @Test
     void getRecommendationsForUser_returnsFilmsLikedByMostSimilarUsersOnly() {
         int targetUserId = 42;
         int similarUserId = 100;

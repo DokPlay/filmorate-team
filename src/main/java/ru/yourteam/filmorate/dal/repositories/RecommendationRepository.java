@@ -1,3 +1,5 @@
+// timlead: перенесён репозиторий рекомендаций в корректный пакет dal.repositories
+// причина: файл лежал вне структуры пакетов, из-за чего IDE не находили компонент и путались при навигации
 package ru.yourteam.filmorate.dal.repositories;//это пакет от дмитрия в PR смотреть.
 //Таблица likes и films по именам колонок опираются на существующие мапперы FilmRowMapper и SQL из веток add-common-films / add-reviews.
 
@@ -6,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,6 +75,25 @@ public class RecommendationRepository {
 
         public int getFilmId() {
             return filmId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            // Сравниваем именно значения userId/filmId, чтобы тесты на containsExactlyInAnyOrder
+            // корректно проверяли содержимое выборки лайков, а не ссылочную идентичность объектов
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            UserLikeRow that = (UserLikeRow) o;
+            return userId == that.userId && filmId == that.filmId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(userId, filmId);
         }
     }
 

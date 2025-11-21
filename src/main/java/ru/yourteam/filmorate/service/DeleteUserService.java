@@ -8,9 +8,11 @@ import ru.yourteam.filmorate.dal.repositories.deleteUserRepository.DeleteUserRep
 @RequiredArgsConstructor
 public class DeleteUserService {
 
-    DeleteUserRepository repository;
+    // Репозиторий храним как финальное поле для гарантированной инъекции зависимостей
+    private final DeleteUserRepository repository;
 
-    public void deleteUserVyID(int userId) {
+    public void deleteUserById(int userId) {
+        // Передаем удаление в слой хранилища, здесь можно навесить дополнительную бизнес-валидацию
         repository.deleteUserById(userId);
     }
 

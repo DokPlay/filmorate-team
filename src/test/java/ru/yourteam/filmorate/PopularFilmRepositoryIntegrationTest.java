@@ -156,4 +156,20 @@ public class PopularFilmRepositoryIntegrationTest extends AbstractIntegrationTes
                 .extracting(PopularFilmDto::getFilmId)
                 .containsExactly(FILM_1, FILM_2);
     }
+
+    @Test
+    void findMostPopular_respectsRequestedLimitAndKeepsStableOrder() {
+        // given
+        insertBaseData();
+
+        // when: запрашиваем только два самых популярных фильма
+        List<PopularFilmDto> result =
+                popularFilmRepository.findMostPopular(2, null, null);
+
+        // then: проверяем и лимит, и порядок сортировки по лайкам/film_id
+        assertThat(result)
+                .as("Должны вернуться только два первых фильма из общего рейтинга")
+                .extracting(PopularFilmDto::getFilmId)
+                .containsExactly(FILM_1, FILM_3);
+    }
 }

@@ -1,1 +1,7 @@
-// Заглушка: безопасность/фильтры/конфигурация доступа.
+package ru.yourteam.filmorate.security;
+
+/**
+ * Security configuration stub.
+ */
+public class SecurityPlaceholder {
+}

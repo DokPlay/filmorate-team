@@ -4,11 +4,14 @@ public enum SortMode {
     LIKES, YEAR;
 
     public static SortMode from(String raw) {
-        if (raw == null) throw new IllegalArgumentException("sort is required");
-        switch (raw.toLowerCase()) {
-            case "likes": return LIKES;
-            case "year":  return YEAR;
-            default: throw new IllegalArgumentException("sort must be 'likes' or 'year'");
+        if (raw == null || raw.isBlank()) {
+            throw new IllegalArgumentException("sort is required");
         }
+        String normalized = raw.trim().toLowerCase();
+        return switch (normalized) {
+            case "likes" -> LIKES;
+            case "year" -> YEAR;
+            default -> throw new IllegalArgumentException("sort must be 'likes' or 'year'");
+        };
     }
 }
