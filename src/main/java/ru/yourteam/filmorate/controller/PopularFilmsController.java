@@ -29,6 +29,8 @@ public class PopularFilmsController {
             @RequestParam(name = "genreId", required = false) @Positive Integer genreId,
             @RequestParam(name = "year", required = false) @Min(1895) Integer year) {
 
+        // Метод поддерживает фильтрацию по жанру и году, поэтому сразу логируем все параметры,
+        // чтобы упростить разбор проблем при обращении к этому endpoint.
         log.info("Request GET /films/popular: count={}, genreId={}, year={}", count, genreId, year);
 
         List<PopularFilmDto> popularFilms =
