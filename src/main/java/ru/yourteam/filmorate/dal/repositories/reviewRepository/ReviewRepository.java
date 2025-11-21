@@ -15,6 +15,8 @@ import ru.yourteam.filmorate.exception.NotFoundException; // commit: едины�
 import ru.yourteam.filmorate.model.Film;
 import ru.yourteam.filmorate.model.Review;
 import ru.yourteam.filmorate.model.User;
+import ru.yourteam.filmorate.util.validation.FilmValidation.FilmValidator;
+import ru.yourteam.filmorate.util.validation.UserValidation.UserValidator;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -28,6 +30,8 @@ public class ReviewRepository {
     private final ReviewRowMapper rowMapper;
     private final UserRowMapper userMapper;
     private final FilmRowMapper filmMapper;
+    private final UserValidator userValidator;
+    private final FilmValidator filmValidator;
 
 
     String CREATE_REVIEW_QUERY = "INSERT INTO reviews (content, is_positive, user_id, film_id, useful) " +
@@ -120,14 +124,14 @@ public class ReviewRepository {
         if (filmId == null) {
             return jdbc.query(GET_ALL_SORTED_REVIEW, rowMapper, count);
         } else {
-            Film film = getFilmByID(filmId);
+            Film film = filmValidator.filmValidation(filmId);
             return jdbc.query(GET_REVIEW_BY_FILM_ID_QUERY, rowMapper, filmId, count);
         }
 
     }
 
     public Review addLikeToReview(int id, int userId) {
-        User user = getUserById(userId);
+        User user = userValidator.userValidation(userId);
         Review review = getReviewById(id);
 
         //        Что бы небыло ошибок, если дважды лайк поставит, или поставит лайк и дизлайк.
@@ -140,7 +144,7 @@ public class ReviewRepository {
     }
 
     public Review removeLikeFromReview(int id, int userId) {
-        User user = getUserById(userId);
+        User user = userValidator.userValidation(userId);
         Review review = getReviewById(id);
 
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);
@@ -150,7 +154,7 @@ public class ReviewRepository {
     }
 
     public Review addDislikeToReview(int id, int userId) {
-        User user = getUserById(userId);
+        User user = userValidator.userValidation(userId);
         Review review = getReviewById(id);
 
         //        Такая же история.
@@ -164,33 +168,13 @@ public class ReviewRepository {
     }
 
     public Review removeDislikeFromReview(int id, int userId) {
-        User user = getUserById(userId);
+        User user = userValidator.userValidation(userId);
         Review review = getReviewById(id);
 
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);
 
         review.setUseful(getReviewUseful(id));
         return review;
-    }
-
-    // Метод для проверки наличия пользователя в базе.
-    private User getUserById(int id) {
-        String query = "SELECT * FROM users WHERE user_id = ?";
-        try {
-            return jdbc.queryForObject(query, userMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("Данный пользователь отсутствует.");
-        }
-    }
-
-    //Метод для проверки наличия фильма в базе.
-    private Film getFilmByID(int id) {
-        String query = "SELECT * FROM films WHERE film_id = ?";
-        try {
-            return jdbc.queryForObject(query, filmMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("Данный фильм отсутствует.");
-        }
     }
 
     private int getReviewUseful(int reviewId) {
