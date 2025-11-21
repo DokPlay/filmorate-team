@@ -81,7 +81,7 @@ public class DirectorRepository extends BaseRepository<Director> {
 
     public List<Director> getAll() {
         List<Director> directors = findMany(FIND_ALL_QUERY);
-        log.info("Получение всех режиссеров: {}", directors);
+        log.info("Получение всех режиссеров: total={}", directors.size());
         return directors;
     }
 
@@ -112,7 +112,7 @@ public class DirectorRepository extends BaseRepository<Director> {
             limit,
             offset
         );
-        log.info("Получение фильмов режиссера {} по лайкам: {}", directorId, films);
+        log.info("Получение фильмов режиссера {} по лайкам: total={}", directorId, films.size());
         return films;
     }
 
@@ -124,7 +124,7 @@ public class DirectorRepository extends BaseRepository<Director> {
             limit,
             offset
         );
-        log.info("Получение фильмов режиссера {} по годам: {}", directorId, films);
+        log.info("Получение фильмов режиссера {} по годам: total={}", directorId, films.size());
         return films;
     }
 

@@ -78,7 +78,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     private void validateDirector(Director director) {
         if (director.getName() == null || director.getName().isEmpty() || director.getName().isBlank()) {
-            log.error("Передано пустое имя режиссера");
+            log.warn("Попытка сохранить режиссера с пустым именем");
             throw new ValidationException("Имя режиссера не может быть пустым");
         }
     }

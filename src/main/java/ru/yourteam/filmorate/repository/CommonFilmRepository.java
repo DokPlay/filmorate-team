@@ -37,7 +37,12 @@ public class CommonFilmRepository extends BaseRepository<CommonFilmDto> {
                                                     int limit, int offset) {
         List<CommonFilmDto> commonLikedFilms =
             findMany(FIND_COMMON_FILMS, userId, friendId, limit, offset);
-        log.info("Получение общих фильмов двух пользователей: {}", commonLikedFilms);
+        log.info(
+            "Получение общих фильмов двух пользователей {} и {}: total={}",
+            userId,
+            friendId,
+            commonLikedFilms.size()
+        );
         return commonLikedFilms;
     }
 }
