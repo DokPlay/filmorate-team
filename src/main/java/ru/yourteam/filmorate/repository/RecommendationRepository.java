@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,6 +73,23 @@ public class RecommendationRepository {
 
         public int getFilmId() {
             return filmId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            UserLikeRow that = (UserLikeRow) o;
+            return userId == that.userId && filmId == that.filmId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(userId, filmId);
         }
     }
 
