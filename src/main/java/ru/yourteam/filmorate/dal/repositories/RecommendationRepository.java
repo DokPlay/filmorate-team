@@ -1,3 +1,5 @@
+// timlead: перенесён репозиторий рекомендаций в корректный пакет dal.repositories
+// причина: файл лежал вне структуры пакетов, из-за чего IDE не находили компонент и путались при навигации
 package ru.yourteam.filmorate.dal.repositories;//это пакет от дмитрия в PR смотреть.
 //Таблица likes и films по именам колонок опираются на существующие мапперы FilmRowMapper и SQL из веток add-common-films / add-reviews.
 
