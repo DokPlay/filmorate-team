@@ -77,6 +77,8 @@ public class RecommendationRepository {
 
         @Override
         public boolean equals(Object o) {
+            // Сравниваем именно значения userId/filmId, чтобы тесты на containsExactlyInAnyOrder
+            // корректно проверяли содержимое выборки лайков, а не ссылочную идентичность объектов
             if (this == o) {
                 return true;
             }
