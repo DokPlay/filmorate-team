@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:16
@@ -5,4 +7,34 @@ services:
       POSTGRES_DB: filmorate
       POSTGRES_USER: filmorate
       POSTGRES_PASSWORD: filmorate
-    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U filmorate"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filmorate
+      SPRING_DATASOURCE_USERNAME: filmorate
+      SPRING_DATASOURCE_PASSWORD: filmorate
+      LOG_FILE_PATH: /var/log/filmorate/filmorate.log
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - app-logs:/var/log/filmorate
+
+volumes:
+  pgdata:
+  app-logs:
