@@ -1,1 +1,7 @@
-// Контроллер для удаления фильмов и пользователей по идентификатору.
+package ru.yourteam.filmorate.controller;
+
+/**
+ * Controller stub for deleting films and users by identifier.
+ */
+public class EntityRemovalController {
+}

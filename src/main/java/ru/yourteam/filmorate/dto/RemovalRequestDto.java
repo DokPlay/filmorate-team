@@ -1,1 +1,7 @@
-// DTO для описания запроса на удаление фильма или пользователя.
+package ru.yourteam.filmorate.dto;
+
+/**
+ * DTO describing a request to remove either a film or a user.
+ */
+public class RemovalRequestDto {
+}
