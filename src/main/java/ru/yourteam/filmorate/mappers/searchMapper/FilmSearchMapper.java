@@ -15,7 +15,12 @@ public class FilmSearchMapper {
         filmDto.setDuration(film.getDuration());
         filmDto.setMpa(MpaMapper.mapToMpaDto(film.getMpa()));
         filmDto.setGenres(GenreMapper.mapToGenresDto(film.getGenres()));
-        filmDto.setDirectorDto(DirectorMapper.mapToDirectorDto(film.getDirector()));
+        // Берем первого режиссера, потому что DTO ожидает одну сущность
+        filmDto.setDirectorDto(film.getDirectors()
+                .stream()
+                .findFirst()
+                .map(DirectorMapper::mapToDirectorDto)
+                .orElse(null));
 
         return filmDto;
     }

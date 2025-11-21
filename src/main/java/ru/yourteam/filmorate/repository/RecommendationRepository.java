@@ -11,15 +11,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
 import ru.yourteam.filmorate.model.Film;
+import ru.yourteam.filmorate.repository.jpa.FilmJpaRepository;
 
 @Repository
 @RequiredArgsConstructor
 public class RecommendationRepository {
 
     private final JdbcTemplate jdbc;
-    private final FilmRowMapper filmRowMapper;
+
+    // JPA-репозиторий с JOIN FETCH, чтобы не загружать жанры и режиссёров по одному (N+1)
+    private final FilmJpaRepository filmJpaRepository;
 
     /**
      * Проверка, существует ли пользователь в таблице users.
@@ -47,22 +49,9 @@ public class RecommendationRepository {
             return Collections.emptyList();
         }
 
-        // строим IN (?, ?, ?, ...)
-        StringBuilder inClause = new StringBuilder();
-        int size = filmIds.size();
-        for (int i = 0; i < size; i++) {
-            if (i > 0) {
-                inClause.append(", ");
-            }
-            inClause.append("?");
-        }
-
-        String sql = "SELECT film_id, film_name, description, release_date, duration, mpa_id "
-            + "FROM films "
-            + "WHERE film_id IN (" + inClause + ")";
-
-        Object[] params = filmIds.toArray();
-        return jdbc.query(sql, filmRowMapper, params);
+        // Подтягиваем связанные сущности одной порцией, чтобы не получить лавину дополнительных запросов
+        // при сериализации фильмов в DTO (жанры, режиссёры, MPA).
+        return filmJpaRepository.findByIdInWithRelations(filmIds);
     }
 
     /**

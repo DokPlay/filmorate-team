@@ -1,20 +1,23 @@
 package ru.yourteam.filmorate.exception;
 
+import org.springframework.http.HttpStatus;
+
 import java.time.OffsetDateTime;
 
 public class ApiError {
-    // commit: расширена модель ошибки для единообразного ответа с HTTP-статусом и путём запроса
+    // Добавлено: единый контракт ответа об ошибке с кодом статуса, сообщением и деталями запроса
     private final int status;
-    // commit: фиксирована недостающая информация о коде и сообщении
-    private final String error;
-    private final String description;
+    private final String code;
+    private final String message;
+    private final String detail;
     private final String path;
     private final OffsetDateTime timestamp;
 
-    public ApiError(int status, String error, String description, String path) {
-        this.status = status;
-        this.error = error;
-        this.description = description;
+    public ApiError(HttpStatus status, String message, String detail, String path) {
+        this.status = status.value();
+        this.code = status.name();
+        this.message = message;
+        this.detail = detail;
         this.path = path;
         this.timestamp = OffsetDateTime.now();
     }
@@ -23,12 +26,16 @@ public class ApiError {
         return status;
     }
 
-    public String getError() {
-        return error;
+    public String getCode() {
+        return code;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
+    }
+
+    public String getDetail() {
+        return detail;
     }
 
     public String getPath() {

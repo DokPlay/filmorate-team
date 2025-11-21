@@ -1,1 +1,54 @@
-# Общая конфигурация приложения (позже добавим).
+spring:
+  application:
+    name: filmorate
+  profiles:
+    active: dev
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/filmorate}
+    username: ${SPRING_DATASOURCE_USERNAME:filmorate}
+    password: ${SPRING_DATASOURCE_PASSWORD:filmorate}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true
+    placeholders:
+      # Тут можно переопределить кастомные значения в SQL, если они появятся в миграциях.
+      samplePlaceholder: placeholder
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  sql:
+    init:
+      mode: never
+
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8081}
+
+# Секция логирования вынесена в logback-spring.xml, чтобы проще было управлять форматами в продакшене.
+logging:
+  file:
+    name: ${LOG_FILE_PATH:logs/filmorate.log}
+  level:
+    root: INFO
+    org.springframework: INFO
