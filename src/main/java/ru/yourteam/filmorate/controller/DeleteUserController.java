@@ -12,10 +12,12 @@ import ru.yourteam.filmorate.service.DeleteUserService;
 @RequiredArgsConstructor
 public class DeleteUserController {
 
-    DeleteUserService service;
+    // Сервис инжектируется через финальное поле, чтобы не было риска получить null в рантайме
+    private final DeleteUserService service;
 
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable int id) {
-        service.deleteUserVyID(id);
+        // Удаляем пользователя по его идентификатору, передавая управление на уровень сервиса
+        service.deleteUserById(id);
     }
 }
