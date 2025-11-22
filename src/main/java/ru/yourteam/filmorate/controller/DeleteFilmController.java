@@ -12,7 +12,7 @@ import ru.yourteam.filmorate.service.DeleteFilmService;
 @RequiredArgsConstructor
 public class DeleteFilmController {
 
-    DeleteFilmService service;
+    private final DeleteFilmService service;
 
 
     @DeleteMapping("/{id}")
