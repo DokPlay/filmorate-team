@@ -1,16 +1,16 @@
 # Сборка образа приложения через многоэтапный пайплайн.
-FROM gradle:8.7-jdk21-alpine AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Кэшируем зависимости: сначала копируем только файлы сборки.
 WORKDIR /workspace/app
-COPY build.gradle settings.gradle gradle.properties* ./
-COPY gradlew .
-COPY gradle ./gradle
-RUN ./gradlew --no-daemon dependencies || true
+COPY pom.xml mvnw* ./
+COPY .mvn .mvn
+RUN chmod +x mvnw
+RUN ./mvnw -B dependency:go-offline || true
 
 # Теперь копируем остальной проект и собираем jar.
 COPY . .
-RUN ./gradlew --no-daemon clean bootJar
+RUN ./mvnw -B clean package -DskipTests
 
 # Минимальный рантайм-образ на основе Eclipse Temurin JDK.
 FROM eclipse-temurin:21-jre-alpine
@@ -22,7 +22,7 @@ USER filmorate
 WORKDIR /app
 
 # Копируем собранный артефакт из стадии build.
-COPY --from=build /workspace/app/build/libs/*.jar app.jar
+COPY --from=build /workspace/app/target/*.jar app.jar
 
 # Переменные окружения управляют сетью и логированием в контейнере.
 ENV JAVA_OPTS="-Xms256m -Xmx512m" \
