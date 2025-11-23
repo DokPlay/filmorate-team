@@ -28,13 +28,13 @@ public class ReviewRepository {
     private final FilmRepository filmRepository;
 
 
-    String CREATE_REVIEW_QUERY = "INSERT INTO reviews (content, is_positive, user_id, film_id, useful) " +
+    private static final String CREATE_REVIEW_QUERY = "INSERT INTO reviews (content, is_positive, user_id, film_id, useful) " +
         "VALUES (?,?,?,?,?)";
-    String GET_REVIEW_BY_ID_QUERY = "SELECT * FROM reviews WHERE review_id = ?";
-    String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, is_positive = ? " +
+    private static final String GET_REVIEW_BY_ID_QUERY = "SELECT * FROM reviews WHERE review_id = ?";
+    private static final String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, is_positive = ? " +
         "WHERE review_id = ?";
-    String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE review_id = ?";
-    String GET_REVIEW_BY_FILM_ID_QUERY =
+    private static final String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE review_id = ?";
+    private static final String GET_REVIEW_BY_FILM_ID_QUERY =
         "SELECT r.review_id, r.content, r.is_positive, r.user_id, r.film_id, " +
             "COALESCE(SUM(CASE WHEN rr.is_positive = true THEN 1 ELSE -1 END), 0) as useful " +
             "FROM reviews r " +
@@ -42,17 +42,17 @@ public class ReviewRepository {
             "WHERE r.film_id = ? " +
             "GROUP BY r.review_id, r.content, r.is_positive, r.user_id, r.film_id " +
             "ORDER BY useful DESC LIMIT ?";
-    String GET_ALL_SORTED_REVIEW =
+    private static final String GET_ALL_SORTED_REVIEW =
         "SELECT r.review_id, r.content, r.is_positive, r.user_id, r.film_id, " +
             "COALESCE(SUM(CASE WHEN rr.is_positive = true THEN 1 ELSE -1 END), 0) as useful " +
             "FROM reviews r " +
             "LEFT JOIN review_ratings rr ON r.review_id = rr.review_id " +
             "GROUP BY r.review_id, r.content, r.is_positive, r.user_id, r.film_id " +
             "ORDER BY useful DESC LIMIT ?";
-    String ADD_LIKE_TO_REVIEW_QUERY = "INSERT INTO review_ratings (review_id, user_id, is_positive) VALUES (?,?,true)";
-    String ADD_DISLIKE_TO_REVIEW_QUERY = "INSERT INTO review_ratings (review_id, user_id, is_positive) VALUES (?,?,false)";
+    private static final String ADD_LIKE_TO_REVIEW_QUERY = "INSERT INTO review_ratings (review_id, user_id, is_positive) VALUES (?,?,true)";
+    private static final String ADD_DISLIKE_TO_REVIEW_QUERY = "INSERT INTO review_ratings (review_id, user_id, is_positive) VALUES (?,?,false)";
 
-    String DELETE_LIKE_FROM_REVIEW_QUERY = "DELETE FROM review_ratings WHERE review_id = ? AND user_id = ? ";
+    private static final String DELETE_LIKE_FROM_REVIEW_QUERY = "DELETE FROM review_ratings WHERE review_id = ? AND user_id = ? ";
 
 
     public Review getReviewById(int id) {
@@ -68,6 +68,10 @@ public class ReviewRepository {
 
 
     public Review createReview(Review review) {
+        // Проверяем наличие связанных сущностей до попытки вставки записи, чтобы не ловить ошибку БД.
+        userRepository.ensureUserExists(review.getUserId());
+        filmRepository.ensureFilmExists(review.getFilmId());
+
         Review createdReview = new Review();
 
         createdReview.setContent(review.getContent());
