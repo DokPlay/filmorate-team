@@ -66,7 +66,6 @@ public class SearchRepository {
         "JOIN film_director fd ON f.film_id = fd.film_id " +
         "JOIN directors d ON fd.director_id = d.director_id " +
         "JOIN likes l ON f.film_id = l.film_id " +
-        // тут вопрос к ТЗ как может быть поиск одновременно по режисеру и по названию фильма.
         "WHERE f.film_name LIKE ? AND d.director_name LIKE ? " +
         "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +

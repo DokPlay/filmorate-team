@@ -14,7 +14,7 @@ public class DeleteFilmRepository {
     private final JdbcTemplate jdbc;
 
     public void deleteFilmById(int filmId) {
-        //        Поскольку во всех таблицах ON DELETE CASCADE, удаляем только из films и review.
+        // Поскольку во всех таблицах ON DELETE CASCADE, удаляем только из films и review.
         jdbc.update(DELETE_FROM_FILMS_QUERY, filmId);
         jdbc.update(DELETE_FROM_REVIEW_QUERY, filmId);
     }

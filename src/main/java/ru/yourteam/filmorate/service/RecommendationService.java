@@ -11,10 +11,10 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yourteam.filmorate.dal.repositories.RecommendationRepository;//pr от Дмитрия
-import ru.yourteam.filmorate.dal.repositories.RecommendationRepository.UserLikeRow;//pr от Дмитрия
+import ru.yourteam.filmorate.dal.repositories.RecommendationRepository;
+import ru.yourteam.filmorate.dal.repositories.RecommendationRepository.UserLikeRow;
 import ru.yourteam.filmorate.dto.RecommendationDto;
-import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для 404
+import ru.yourteam.filmorate.exception.NotFoundException;
 import ru.yourteam.filmorate.mappers.recommendationMappers.RecommendationMapper;
 import ru.yourteam.filmorate.model.Film;
 

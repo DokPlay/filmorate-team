@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.ReviewRowMapper;
-import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для корректной обработки 404
+import ru.yourteam.filmorate.exception.NotFoundException;
 import ru.yourteam.filmorate.model.Review;
 import ru.yourteam.filmorate.repository.FilmRepository;
 import ru.yourteam.filmorate.repository.UserRepository;
@@ -128,7 +128,7 @@ public class ReviewRepository {
         userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
-        //        Что бы небыло ошибок, если дважды лайк поставит, или поставит лайк и дизлайк.
+        // Чтобы не возникало ошибок при повторном лайке или смене оценки.
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);
 
         jdbc.update(ADD_LIKE_TO_REVIEW_QUERY, id, userId);
@@ -151,7 +151,7 @@ public class ReviewRepository {
         userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
-        //        Такая же история.
+        // Аналогичная защита от повторных действий пользователя.
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);
 
         jdbc.update(ADD_DISLIKE_TO_REVIEW_QUERY, id, userId);

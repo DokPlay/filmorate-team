@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yourteam.filmorate.dal.repositories.PopularFilmRepository;
 import ru.yourteam.filmorate.dto.PopularFilmDto;
-import ru.yourteam.filmorate.exception.ValidationException; // commit: используем единый пакет исключений
+import ru.yourteam.filmorate.exception.ValidationException;
 
 @Slf4j
 @Service
