@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Component
 public class FilmSearchRowMapper implements RowMapper<Film> {
@@ -30,12 +31,18 @@ public class FilmSearchRowMapper implements RowMapper<Film> {
         mpa.setName(resultSet.getString("mpa_name"));
         film.setMpa(mpa);
 
-        Director director = new Director();
-        director.setId(resultSet.getLong("director_id"));
-        director.setName(resultSet.getString("director_name"));
+        Long directorId = (Long) resultSet.getObject("director_id");
+        Optional<String> directorName = Optional.ofNullable(resultSet.getString("director_name"));
 
-        // Оборачиваем режиссера в коллекцию, потому что в сущности хранится ManyToMany
-        film.setDirectors(new HashSet<>(Collections.singletonList(director)));
+        if (directorId != null && directorName.isPresent()) {
+            Director director = new Director();
+            director.setId(directorId);
+            director.setName(directorName.get());
+            // Оборачиваем режиссера в коллекцию, потому что в сущности хранится ManyToMany
+            film.setDirectors(new HashSet<>(Collections.singletonList(director)));
+        } else {
+            film.setDirectors(Collections.emptySet());
+        }
         film.setGenres(new ArrayList<>());
         return film;
     }

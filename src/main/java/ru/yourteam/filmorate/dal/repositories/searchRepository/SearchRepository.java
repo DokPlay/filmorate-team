@@ -27,8 +27,8 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
-        "JOIN film_director fd ON f.film_id = fd.film_id " +
-        "JOIN directors d ON fd.director_id = d.director_id " +
+        "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
+        "LEFT JOIN directors d ON fd.director_id = d.director_id " +
         "JOIN likes l ON f.film_id = l.film_id " +
         "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +
@@ -38,8 +38,8 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
-        "JOIN film_director fd ON f.film_id = fd.film_id " +
-        "JOIN directors d ON fd.director_id = d.director_id " +
+        "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
+        "LEFT JOIN directors d ON fd.director_id = d.director_id " +
         "JOIN likes l ON f.film_id = l.film_id " +
         "WHERE f.film_name LIKE ? " +
         "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
@@ -51,8 +51,8 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
-        "JOIN film_director fd ON f.film_id = fd.film_id " +
-        "JOIN directors d ON fd.director_id = d.director_id " +
+        "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
+        "LEFT JOIN directors d ON fd.director_id = d.director_id " +
         "JOIN likes l ON f.film_id = l.film_id " +
         "WHERE d.director_name LIKE ? " +
         "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
@@ -63,8 +63,8 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
-        "JOIN film_director fd ON f.film_id = fd.film_id " +
-        "JOIN directors d ON fd.director_id = d.director_id " +
+        "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
+        "LEFT JOIN directors d ON fd.director_id = d.director_id " +
         "JOIN likes l ON f.film_id = l.film_id " +
         "WHERE f.film_name LIKE ? AND d.director_name LIKE ? " +
         "GROUP BY f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
