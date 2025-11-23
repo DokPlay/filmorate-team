@@ -23,7 +23,7 @@ public class SearchRepository {
     private final FilmSearchRowMapper mapper;
     private final GenreRowMapper genreMapper;
 
-    String GET_ALL_SORTED_FILMS_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
+    private static final String GET_ALL_SORTED_FILMS_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
@@ -34,7 +34,7 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "ORDER BY COUNT(l.user_id) DESC";
 
-    String GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
+    private static final String GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
@@ -47,7 +47,7 @@ public class SearchRepository {
         "ORDER BY COUNT(l.user_id) DESC";
 
 
-    String GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
+    private static final String GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
@@ -59,7 +59,7 @@ public class SearchRepository {
         "d.director_id, d.director_name " +
         "ORDER BY COUNT(l.user_id) DESC";
 
-    String GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
+    private static final String GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, m.mpa_id, m.mpa_name, " +
         "d.director_id, d.director_name " +
         "FROM films f " +
         "JOIN mpa m ON f.mpa_id = m.mpa_id " +
@@ -75,10 +75,10 @@ public class SearchRepository {
     public List<Film> getAllSortedByRatingFilms(SearchService.Type type, String by) {
         String searchPattern = by + "%";
         return switch (type) {
-            case TITLE -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, searchPattern, null);
-            case DIRECTOR -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, searchPattern, null);
+            case TITLE -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, searchPattern);
+            case DIRECTOR -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, searchPattern);
             case ALL -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY, searchPattern, searchPattern);
-            case NOTHING -> setGenresToFilm(GET_ALL_SORTED_FILMS_QUERY, null, null);
+            case NOTHING -> setGenresToFilm(GET_ALL_SORTED_FILMS_QUERY);
             default -> throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Неизвестный параметр запроса: " + by
@@ -87,36 +87,27 @@ public class SearchRepository {
 
     }
 
-    private List<Film> setGenresToFilm(String query, String firstParam, String secondParam) {
-        List<Film> popularFilms;
-        if (firstParam == null) {
-            popularFilms = jdbc.query(query, mapper);
-        } else if (secondParam == null) {
-            popularFilms = jdbc.query(query, mapper, firstParam);
-        } else {
-            popularFilms = jdbc.query(query, mapper, firstParam, secondParam);
-        }
+    private List<Film> setGenresToFilm(String query, Object... params) {
+        List<Film> popularFilms = jdbc.query(query, mapper, params);
         if (popularFilms.isEmpty()) {
             return popularFilms;
         }
 
-        List<Integer> filmsId = new ArrayList<>();
-        StringBuilder sb = new StringBuilder("?, ".repeat(popularFilms.size()));
-        sb.delete(sb.length() - 2, sb.length());
+        List<Integer> filmsId = popularFilms.stream()
+            .map(Film::getId)
+            .collect(Collectors.toList());
 
-        for (Film film : popularFilms) {
-            filmsId.add(film.getId());
-        }
+        String placeholders = String.join(", ", java.util.Collections.nCopies(filmsId.size(), "?"));
         String popularFilmGenreQuery = "SELECT g.genre_id, g.genre_name, fg.film_id " +
             "FROM genres AS g " +
             "JOIN film_genre AS fg ON g.genre_id = fg.genre_id " +
-            "WHERE fg.film_id IN (" + sb + ")";
-
+            "WHERE fg.film_id IN (" + placeholders + ")";
 
         List<Genre> genresForPopularFilms = jdbc.query(popularFilmGenreQuery, genreMapper, filmsId.toArray());
+        var genresByFilmId = genresForPopularFilms.stream().collect(Collectors.groupingBy(Genre::getFilmId));
+
         for (Film film : popularFilms) {
-            film.setGenres(genresForPopularFilms.stream().filter(genre -> genre.getFilmId() == film.getId()).
-                collect(Collectors.toList()));
+            film.setGenres(genresByFilmId.getOrDefault(film.getId(), new ArrayList<>()));
         }
 
         return popularFilms;
