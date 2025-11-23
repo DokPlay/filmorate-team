@@ -8,15 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.FilmRowMapper;
 import ru.yourteam.filmorate.dal.mappers.reviewRowMappers.ReviewRowMapper;
-import ru.yourteam.filmorate.dal.mappers.UserRowMapper;
 import ru.yourteam.filmorate.exception.NotFoundException; // commit: единый пакет исключений для корректной обработки 404
-import ru.yourteam.filmorate.model.Film;
 import ru.yourteam.filmorate.model.Review;
-import ru.yourteam.filmorate.model.User;
-import ru.yourteam.filmorate.util.validation.FilmValidation.FilmValidator;
-import ru.yourteam.filmorate.util.validation.UserValidation.UserValidator;
+import ru.yourteam.filmorate.repository.FilmRepository;
+import ru.yourteam.filmorate.repository.UserRepository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -28,10 +24,8 @@ public class ReviewRepository {
 
     private final JdbcTemplate jdbc;
     private final ReviewRowMapper rowMapper;
-    private final UserRowMapper userMapper;
-    private final FilmRowMapper filmMapper;
-    private final UserValidator userValidator;
-    private final FilmValidator filmValidator;
+    private final UserRepository userRepository;
+    private final FilmRepository filmRepository;
 
 
     String CREATE_REVIEW_QUERY = "INSERT INTO reviews (content, is_positive, user_id, film_id, useful) " +
@@ -124,14 +118,14 @@ public class ReviewRepository {
         if (filmId == null) {
             return jdbc.query(GET_ALL_SORTED_REVIEW, rowMapper, count);
         } else {
-            Film film = filmValidator.filmValidation(filmId);
+            filmRepository.ensureFilmExists(filmId);
             return jdbc.query(GET_REVIEW_BY_FILM_ID_QUERY, rowMapper, filmId, count);
         }
 
     }
 
     public Review addLikeToReview(int id, int userId) {
-        User user = userValidator.userValidation(userId);
+        userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
         //        Что бы небыло ошибок, если дважды лайк поставит, или поставит лайк и дизлайк.
@@ -144,7 +138,7 @@ public class ReviewRepository {
     }
 
     public Review removeLikeFromReview(int id, int userId) {
-        User user = userValidator.userValidation(userId);
+        userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);
@@ -154,7 +148,7 @@ public class ReviewRepository {
     }
 
     public Review addDislikeToReview(int id, int userId) {
-        User user = userValidator.userValidation(userId);
+        userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
         //        Такая же история.
@@ -168,7 +162,7 @@ public class ReviewRepository {
     }
 
     public Review removeDislikeFromReview(int id, int userId) {
-        User user = userValidator.userValidation(userId);
+        userRepository.ensureUserExists(userId);
         Review review = getReviewById(id);
 
         jdbc.update(DELETE_LIKE_FROM_REVIEW_QUERY, id, userId);

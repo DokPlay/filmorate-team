@@ -73,74 +73,37 @@ public class SearchRepository {
         "ORDER BY COUNT(l.user_id) DESC";
 
     public List<Film> getAllSortedByRatingFilms(SearchService.Type type, String by) {
-        String str = by + "%";
-        String str1 = str;
-        switch (type) {
-            case TITLE -> {
-                return setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, str);
-            }
-            case DIRECTOR -> {
-                return setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, str);
-            }
-            case ALL -> {
-                return setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY, str, str1);
-            }
-            case NOTHING -> {
-                return setGenresToFilm(GET_ALL_SORTED_FILMS_QUERY, null);
-            }
+        String searchPattern = by + "%";
+        return switch (type) {
+            case TITLE -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, searchPattern, null);
+            case DIRECTOR -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, searchPattern, null);
+            case ALL -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY, searchPattern, searchPattern);
+            case NOTHING -> setGenresToFilm(GET_ALL_SORTED_FILMS_QUERY, null, null);
             default -> throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Неизвестный параметр запроса: " + by
             );
-        }
+        };
 
     }
 
-    private List<Film> setGenresToFilm(String query, String str) {
-        List<Film> popularFilms = new ArrayList<>();
-        if (str != null) {
-            List<Film> withBy = jdbc.query(query, mapper, str);
-            popularFilms.addAll(withBy);
+    private List<Film> setGenresToFilm(String query, String firstParam, String secondParam) {
+        List<Film> popularFilms;
+        if (firstParam == null) {
+            popularFilms = jdbc.query(query, mapper);
+        } else if (secondParam == null) {
+            popularFilms = jdbc.query(query, mapper, firstParam);
         } else {
-            List<Film> withOutBy = jdbc.query(query, mapper);
-            popularFilms.addAll(withOutBy);
+            popularFilms = jdbc.query(query, mapper, firstParam, secondParam);
         }
+        if (popularFilms.isEmpty()) {
+            return popularFilms;
+        }
+
         List<Integer> filmsId = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < popularFilms.size(); i++) {
-            sb.append("?, ");
-        }
-        if (sb.length() > 0) {
-            sb.delete(sb.length() - 2, sb.length());
-        }
-        for (Film film : popularFilms) {
-            filmsId.add(film.getId());
-        }
-        String popularFilmGenreQuery = "SELECT g.genre_id, g.genre_name, fg.film_id " +
-            "FROM genres AS g " +
-            "JOIN film_genre AS fg ON g.genre_id = fg.genre_id " +
-            "WHERE fg.film_id IN (" + sb + ")";
+        StringBuilder sb = new StringBuilder("?, ".repeat(popularFilms.size()));
+        sb.delete(sb.length() - 2, sb.length());
 
-
-        List<Genre> genresForPopularFilms = jdbc.query(popularFilmGenreQuery, genreMapper, filmsId.toArray());
-        for (Film film : popularFilms) {
-            film.setGenres(genresForPopularFilms.stream().filter(genre -> genre.getFilmId() == film.getId()).
-                collect(Collectors.toList()));
-        }
-
-        return popularFilms;
-    }
-
-    private List<Film> setGenresToFilm(String query, String str1, String str2) {
-        List<Film> popularFilms = jdbc.query(query, mapper, str1, str2);
-        List<Integer> filmsId = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < popularFilms.size(); i++) {
-            sb.append("?, ");
-        }
-        if (sb.length() > 0) {
-            sb.delete(sb.length() - 2, sb.length());
-        }
         for (Film film : popularFilms) {
             filmsId.add(film.getId());
         }

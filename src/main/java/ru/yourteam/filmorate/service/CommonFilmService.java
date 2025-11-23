@@ -1,4 +1,6 @@
-// Сервисный слой для расчёта общих фильмов между пользователями.
+/**
+ * Сервисный слой для расчёта общих фильмов между пользователями.
+ */
 package ru.yourteam.filmorate.service;
 
 import ru.yourteam.filmorate.dto.CommonFilmDto;
