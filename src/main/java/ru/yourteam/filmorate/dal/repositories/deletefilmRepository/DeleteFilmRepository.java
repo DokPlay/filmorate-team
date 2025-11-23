@@ -9,13 +9,11 @@ import org.springframework.stereotype.Repository;
 public class DeleteFilmRepository {
 
     private static final String DELETE_FROM_FILMS_QUERY = "DELETE FROM films WHERE film_id = ?";
-    private static final String DELETE_FROM_REVIEW_QUERY = "DELETE FROM review WHERE film_id = ?";
 
     private final JdbcTemplate jdbc;
 
     public void deleteFilmById(int filmId) {
-        // Поскольку во всех таблицах ON DELETE CASCADE, удаляем только из films и review.
+        // Поскольку связанные таблицы используют ON DELETE CASCADE, достаточно удалить сам фильм.
         jdbc.update(DELETE_FROM_FILMS_QUERY, filmId);
-        jdbc.update(DELETE_FROM_REVIEW_QUERY, filmId);
     }
 }
