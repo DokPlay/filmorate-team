@@ -72,11 +72,14 @@ public class SearchRepository {
         "ORDER BY COUNT(l.user_id) DESC";
 
     public List<Film> getAllSortedByRatingFilms(SearchService.Type type, String by) {
-        String searchPattern = by + "%";
         return switch (type) {
-            case TITLE -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, searchPattern);
-            case DIRECTOR -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, searchPattern);
-            case ALL -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY, searchPattern, searchPattern);
+            case TITLE -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_FILM_NAME_QUERY, buildSearchPattern(by));
+            case DIRECTOR -> setGenresToFilm(GET_ALL_SORTED_FILMS_BY_DIRECTOR_NAME_QUERY, buildSearchPattern(by));
+            case ALL -> setGenresToFilm(
+                GET_ALL_SORTED_FILMS_BY_FILM_NAME_AND_DIRECTOR_NAME_QUERY,
+                buildSearchPattern(by),
+                buildSearchPattern(by)
+            );
             case NOTHING -> setGenresToFilm(GET_ALL_SORTED_FILMS_QUERY);
             default -> throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -84,6 +87,13 @@ public class SearchRepository {
             );
         };
 
+    }
+
+    private String buildSearchPattern(String by) {
+        if (by == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Поисковая строка не может быть пустой");
+        }
+        return by + "%";
     }
 
     private List<Film> setGenresToFilm(String query, Object... params) {
