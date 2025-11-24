@@ -93,7 +93,12 @@ public class SearchRepository {
         if (by == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Поисковая строка не может быть пустой");
         }
-        return by + "%";
+        String normalized = by.trim();
+        if (normalized.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Поисковая строка не может быть пустой");
+        }
+        // Оборачиваем строку в подстановочные символы, чтобы искать вхождение, а не только префикс.
+        return "%" + normalized + "%";
     }
 
     private List<Film> setGenresToFilm(String query, Object... params) {
